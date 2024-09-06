@@ -21,33 +21,52 @@ class inhibitor:
 
 # 英雄
 class champion:
-    def __init__(self, name, item, keystone, hp, mana, position, team, summoners1, summoners2) -> None:
-        self.item = item
+    def __init__(self, name, correctkeystone, position, correctsummoners) -> None:
+        self.item = []
         self.name = name
-        self.keystone = keystone
-        self.hp = hp
-        self.mana = mana
+        self.correctkeystone = correctkeystone
+        self.hp = None
+        self.mana = None
         self.position = position
-        self.team = team
-        self.summoners1 = summoners1
-        self.summoners2 = summoners2
+        self.correctsummoners = correctsummoners
 
-    def state_value(self, hp_now, mana_now, playstyle, keyitem, correctkeystone, current_location, summoners1_, summoners2_,):
+        self.summoners = []
+
+        # 風格
+        self.style = None
+
+    # 當前藍 血總量
+    def hp_mana_now(self, current_hp, current_mana):
+        self.hp = current_hp
+        self.mana = current_mana
+    
+    # 裝備輸入
+    def item_now(self, current_item):
+        self.item = current_item
+
+    # 召喚師技能輸入
+    def summoners_now(self, current_summoners):
+        self.summoners = current_summoners
+
+    # TODO
+    # 狀態評分
+    def state_value(self, hp_now, mana_now, playstyle, keyitem, keystone, current_location, summoners1_, summoners2_,):
         hp = hp_now / self.hp
         mana = mana_now / self.mana
         if playstyle == 0: # ad, use aa
             value = hp * 80 + mana * 20
         elif playstyle == 1: # ad, use skills
             value = hp * 60 + mana * 40
-        else: # ap
+        elif playstyle == 2: # ap
             value = hp * 40 + mana * 60
 
         for it in self.item:
             if it == keyitem:
                 value += 40
-            
-        if self.keystone == correctkeystone:
-            value += 20
+
+        # TODO  
+        # if keystone == self.correctkeystone:
+        #     value += 20
         
         if 0 < abs(current_location - self.position) <= 1:
             value += self.team * 30

@@ -541,6 +541,7 @@ def junglecamp(time, drakecount, drakes):
 def minionwave():
     pass
 
+# 可行動作
 def available_actions(ally, enemy, neutral):
 
     actions = []
@@ -559,6 +560,8 @@ def available_actions(ally, enemy, neutral):
             actions.append(counter)
 
     return actions
+
+# 設計可能情況
 
 def main():
     current_game_time, current_game_seconds = generate_random_game_time()
