@@ -6,7 +6,7 @@ key_runes = ["PTA", "FF", "Con",
              "Elec", "DH", "HoB", 
              "SA", "AC", "PR", 
              "GotU", "AS", "Guard", 
-             "GA", "US", "FS", ]
+             "GA", "US", "FS" ]
 
 # 上路角色
 top_Aatrox = champion("Aatrox", ["Con", "AC"], "top", ["flash", "tp", "ignite", "barrier"])
@@ -29,11 +29,11 @@ top_Jax = champion("Jax", ["Con", "GotU"], "top", ["flash", "tp", "ignite"])
 top_Yorick = champion("Yorick", ["Con", "AC"], "top", ["flash", "tp", "ghost", "ignite"])
 top_Zac = champion("Zac", ["Con", "GotU", "AS"], "top", ["flash", "tp", "ignite"])
 top_Urgot = champion("Urgot", ["Con", "PTA"], "top", ["flash", "tp", "ignite"])
-top_Malphite = champion("Malphite", ["AC"], "top", ["flash", "tp", "ignite"])
+top_Malphite = champion("Malphite", ["AC", "GotU"], "top", ["flash", "tp", "ignite"])
 top_Gwen = champion("Gwen", ["Con"], "top", ["flash", "ignite", "ghost", "tp"])
 top_Illaoi = champion("Illaoi", ["Con", "GotU"], "top", ["flash", "tp", "exhaust", "ignite"])
 top_Jayce = champion("Jayce", ["Con", "PR", "SA"], "top", ["flash", "tp", "ignite"])
-top_Yone = champion("Yone", ["Con", "FF"], "top", ["flash", "tp", "ignite"])
+top_Yone = champion("Yone", ["Con", "FF", "GotU"], "top", ["flash", "tp", "ignite"])
 top_Udyr = champion("Udyr", ["GotU"], "top", ["flash", "tp", "ghost"])
 top_Ryze = champion("Ryze", ["PR"], "top", ["flash", "tp", "ghost"])
 top_Kennen = champion("Kennen", ["Elec", "SA"], "top", ["flash", "tp", "ignite"])
@@ -130,10 +130,156 @@ jungle_champions = [jungle_Leesin, jungle_Lillia, jungle_Reksai, jungle_Noc, top
                     jungle_Brand, jungle_Zed, jungle_Sylas, jungle_Rengar, jungle_Maokai, jungle_Qiyanna]
 
 # 中路角色
-mid_champions = []
+mid_Sylas = champion("Sylas", ["Con", "Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Leblanc = champion("Leblanc", ["Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Yone = champion("Yone", ["Con", "FF", "GotU"], "mid", ["flash", "tp", "ignite"])
+mid_Hwei = champion("Hwei", ["AC"], "mid", ["flash", "tp", "barrier"])
+mid_Ahri = champion("Ahri", ["Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Yassuo = champion("Yassuo", ["Con", "FF", "GotU"], "mid", ["flash", "tp", "ignite"])
+mid_Vex = champion("Vex", ["Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Zed = champion("Zed", ["Con", "Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Lissandra = champion("Lissandra", ["Elec", "AC"], "mid", ["flash", "tp", "ignite"])
+mid_Galio = champion("Galio", ["Elec", "AS"], "mid", ["flash", "tp", "ignite"])
+mid_Anivia = champion("Anivia", ["Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Tf = champion("Tf", ["Elec"], "mid", ["flash", "tp", "ignite"]) 
+mid_Talon = champion("Talon", ["Con", "Elec", "PR"], "mid", ["flash", "tp", "ignite"])
+mid_Akali = champion("Akali", ["Con", "Elec", "FF"], "mid", ["flash", "tp", "ignite"])
+mid_Cassiopeia = champion("Cassiopeia", ["Con"], "mid", ["flash", "tp", "barrier"])
+mid_Xerath = champion("Xerath", ["AC"], "mid", ["flash", "tp", "barrier"])
+mid_Orianna = champion("Orianna", ["PR", "SA"], "mid", ["flash", "tp", "barrier", "cleanse"])
+mid_ASol = champion("ASol", ["AC"], "mid", ["flash", "tp", "exhaust"])
+mid_Renecton = champion("Renecton", ["Con", "PTA"], "mid", ["flash", "tp", "ignite"])
+mid_Syndra = champion("Syndra", ["FS", "Elec"], "mid", ["flash", "tp", "ghost", "barrier"])
+mid_Naafiri = champion("Naafiri", ["FS", "Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Katerina = champion("Katerina", ["Con", "Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Nunu = champion("Nunu", ["Elec"], "mid", ["flash", "cleanse", "ignite"])
+mid_Ryze = champion("Ryze", ["PR"], "mid", ["flash", "tp", "ignite"])
+mid_Zoe = champion("Zoe", ["Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Fizz = champion("Fizz", ["Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Diana = champion("Diana", ["Con", "Elec", "PR"], "mid", ["flash", "tp", "ignite"])
+mid_Jayce = champion("Jayce", ["PR", "Con"], "mid", ["flash", "tp", "ignite"])
+mid_Victor = champion("Victor", ["PR", "SA", "FS"], "mid", ["flash", "tp", "ghost"])
+mid_Aurora = champion("Aurora", ["Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Garen = champion("Garen", ["Con"], "mid", ["flash", "tp", "ignite"])
+mid_Annie = champion("Annie", ["Elec", "FS"], "mid", ["flash", "tp", "ignite"])
+mid_Malzahar = champion("Malzahar", ["AC", "SA"], "mid", ["flash", "tp", "ignite"])
+mid_Neeko = champion("Neeko", ["Elec", "AC"], "mid", ["flash", "tp", "ignite"])
+mid_Qiyanna = champion("Qiyanna", ["FS", "Elec", "Con"], "mid", ["flash", "tp", "ignite"])
+mid_Veigar = champion("Veigar", ["AC", "FS"], "mid", ["flash", "tp", "barrier"])
+mid_Vladimir = champion("Vladimir", ["SA", "PR", "GotU", "Elec"], "mid", ["flash", "ghost", "ignite"])
+mid_Akshan = champion("Akshan", ["PTA"], "mid", ["flash", "tp", "ignite"])
+mid_Nasus = champion("Nasus", ["SA", "FF"], "mid", ["flash", "tp", "ghost"])
+mid_Patheon = champion("Patheon", ["Con", "PTA"], "mid", ["flash", "tp", "ignite"])
+mid_Taliyah = champion("Taliyah", ["PR", "FS"], "mid", ["flash", "tp", "ignite"])
+mid_Gragas = champion("Gragas", ["PR", "AC"], "mid", ["flash", "tp", "ignite"])
+mid_Irelia = champion("Irelia", ["Con", "PTA"], "mid", ["flash", "tp", "ignite"])
+mid_Kennen = champion("Kennen", ["Elec", "SA"], "mid", ["flash", "tp", "ignite"])
+mid_Ekko = champion("Ekko", ["Elec", "HoB"], "mid", ["flash", "tp", "ignite"])
+mid_Swain = champion("Swain", ["Con"], "mid", ["flash", "tp", "ghost"])
+mid_Malphite = champion("Malphite", ["AC", "GotU"], "mid", ["flash", "tp", "ignite"])
+mid_Lux = champion("Lux", ["AC"], "mid", ["flash", "tp", "barrier"])
+mid_Azir = champion("Azir", ["Con", "FF", "GotU"], "mid", ["flash", "tp", "ignite"])
+mid_Quinn = champion("Quinn", ["PTA", "Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Kassadin = champion("Kassadin", ["FF", "Elec"], "mid", ["flash", "tp", "ignite"])
+mid_Smolder = champion("Smolder", ["FF", "GotU"], "mid", ["flash", "tp", "barrier"])
+mid_Rumble = champion("Rumble", ["AC"], "mid", ["flash", "tp", "ignite"])
+mid_Tristana = champion("Tristana", ["FF", "PTA"], "mid", ["flash", "tp", "ignite"])
+mid_Ziggs = champion("Ziggs", ["AC"], "mid", ["flash", "tp", "ignite"])
+mid_Lucian = champion("Lucian", ["PTA", "FS"], "mid", ["flash", "tp", "barrier"])
+mid_Corgi = champion("Corgi", ["FF", "Con"], "mid", ["flash", "tp", "ignite"])
+mid_Zeri = champion("Zeri", ["FF"], "mid", ["flash", "tp", "barrier"])
+
+mid_champions = [mid_Sylas, mid_Leblanc, mid_Yone, mid_Hwei, mid_Ahri, mid_Yassuo, mid_Vex, mid_Zed, mid_Lissandra, mid_Galio,
+                 mid_Anivia, mid_Tf, mid_Talon, mid_Akali, mid_Cassiopeia, mid_Xerath, mid_Orianna, mid_ASol, mid_Renecton,
+                 mid_Syndra, mid_Naafiri, mid_Katerina, mid_Nunu, mid_Ryze, mid_Zoe, mid_Fizz, mid_Diana, mid_Jayce, mid_Victor,
+                 mid_Aurora, mid_Garen, mid_Annie, mid_Malzahar, mid_Neeko, mid_Qiyanna, mid_Vladimir, mid_Veigar, mid_Nasus, 
+                 mid_Patheon, mid_Akshan, mid_Gragas, mid_Irelia, mid_Taliyah, mid_Kennen, mid_Ekko, mid_Swain, top_Malphite,
+                 mid_Lux, mid_Azir, mid_Quinn, mid_Kassadin, mid_Smolder, mid_Rumble, mid_Tristana, mid_Ziggs, mid_Lucian, mid_Corgi, mid_Zeri]
 
 # 下路角色
-ad_champions = []
+ad_Jhin = champion("Jhin", ["FF"], "ad", ["flash", "barrier", "cleanse"])
+ad_Kaisa = champion("Kaisa", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Jinx = champion("Jinx", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Ashe = champion("Ashe", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Ziggs = champion("Ziggs", ["AC"], "ad", ["flash", "tp", "barrier"])
+ad_Swain = champion("Swain", ["Con"], "mid", ["flash", "exhaust", "ghost"])
+ad_Ez = champion("Ez", ["Con", "PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Lucian = champion("Lucian", ["PTA", "FS"], "ad", ["flash", "cleanse", "barrier"])
+ad_Kogmaw = champion("Kogmaw", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Mf = champion("Mf", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Twitch = champion("Twitch", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Samira = champion("Samira", ["Con"], "mid", ["flash", "barrier", "cleanse"])
+ad_Draven = champion("Draven", ["PTA", "HoB"], "ad", ["flash", "barrier", "cleanse"])
+ad_Kaitlyn = champion("Kaitlyn", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Seraphine = champion("Seraphine", ["SA"], "ad", ["flash", "barrier", "tp"])
+ad_Sivir = champion("Sivir", ["FF", "FS"], "ad", ["flash", "barrier", "tp"])
+ad_Kalista = champion("Kalista", ["PTA", "HoB"], "ad", ["flash", "barrier", "cleanse"])
+ad_Varus = champion("Varus", ["PTA", "AC"], "ad", ["flash", "barrier", "cleanse"])
+ad_Xayah = champion("Xayah", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Zeri = champion("Zeri", ["FF"], "ad", ["flash", "barrier", "cleanse"])
+ad_Aphelios = champion("Aphelios", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Hwei = champion("Hwei", ["AC"], "ad", ["flash", "tp", "barrier"])
+ad_Smolder = champion("Smolder", ["FF"], "ad", ["flash", "tp", "barrier"])
+ad_Nilah = champion("Nilah", ["Con"], "ad", ["flash", "barrier", "cleanse"])
+ad_Vayne = champion("Vayne", ["PTA", "FF", "GotU"], "ad", ["flash", "barrier", "cleanse"])
+ad_Tristana = champion("Tristana", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
+
+ad_champions = [ad_Jhin, ad_Kaisa, ad_Jinx, ad_Ashe, ad_Ziggs, ad_Swain, ad_Ez, ad_Lucian, ad_Kogmaw, ad_Mf, ad_Twitch, ad_Samira,
+                ad_Draven, ad_Kaitlyn, ad_Seraphine, ad_Sivir, ad_Kalista, ad_Varus, ad_Xayah, ad_Zeri, ad_Aphelios, ad_Hwei, ad_Smolder, ad_Vayne, ad_Tristana]
 
 # 輔助角色
-support_champions = []
+support_Poppy = champion("Poppy", ["HoB", "AS"], "support", ["flash", "exhaust", "ignite"])
+support_Sena = champion("Sena", ["GotU", "SA"], "support", ["flash", "heal", "exhaust"])
+support_Pyke = champion("Pyke", ["HoB"], "support", ["flash", "exhaust", "ignite"])
+support_Xerath = champion("Xerath", ["AC", "FS"], "support", ["flash", "heal", "exhaust"])
+support_Lulu = champion("Lulu", ["SA"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Leona = champion("Leona", ["AS"], "support", ["flash", "exhaust", "ignite"])
+support_Leblanc = champion("Leblanc", ["Elec", "FS"], "support", ["flash", "exhaust", "ignite"])
+support_Shaco = champion("Shaco", ["AC", "HoB"], "support", ["flash", "exhaust", "ignite"])
+support_Bard = champion("Bard", ["Elec", "Guard"], "support", ["flash", "exhaust", "ignite", "heal"])
+support_Taric = champion("Taric", ["GA"], "support", ["flash", "exhaust", "ignite"])
+support_Blitz = champion("Blitz", ["GA"], "support", ["flash", "exhaust", "ignite"])
+support_Nautilus = champion("Nautilus", ["GA", "AS"], "support", ["flash", "exhaust", "ignite"])
+support_Thresh = champion("Thresh", ["GA", "AS"], "support", ["flash", "exhaust", "ignite"])
+support_Seraphine = champion("Seraphine", ["SA"], "support", ["flash", "exhaust", "ignite", "heal"])
+support_Barum = champion("Barum", ["Guard"], "support", ["flash", "exhaust", "ignite"])
+support_Rell = champion("Rell", ["GA", "AS"], "support", ["flash", "exhaust", "ignite"])
+support_Alistar = champion("Alistar", ["PR", "AS"], "support", ["flash", "exhaust", "ignite"])
+support_Zilean = champion("Zilean", ["AC", "SA"], "support", ["flash", "heal", "exhaust"])
+support_Shen = champion("Shen", ["AS"], "support", ["flash", "exhaust", "ignite"])
+support_Neeko = champion("Neeko", ["AC"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Karma = champion("Karma", ["AC"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Rakan = champion("Rakan", ["Guard"], "support", ["flash", "exhaust", "ignite"])
+support_Lux = champion("Lux", ["AC"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Maokai = champion("Maokai", ["AS"], "support", ["flash", "exhaust", "ignite"])
+support_Hwei = champion("Hwei", ["AC"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Soraka = champion("Soraka", ["SA"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Sona = champion("Sona", ["SA"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Nami = champion("Nami", ["SA"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Camille = champion("Camille", ["HoB"], "support", ["flash", "exhaust", "ignite"])
+support_Velkoz = champion("Velkoz", ["AC"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Millio = champion("Millio", ["SA"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Yuumi = champion("Yuumi", ["SA"], "support", ["heal", "exhaust", "ignite"])
+support_Zac = champion("Zac", ["AS"], "support", ["flash", "exhaust", "ignite"])
+support_Morgana = champion("Morgana", ["AC"], "support", ["flash", "exhaust", "ignite"])
+support_Galio = champion("Galio", ["AS"], "support", ["flash", "exhaust", "ignite"])
+support_Brand = champion("Brand", ["AC", "DH"], "support", ["flash", "exhaust", "ignite"])
+support_Zoe = champion("Zoe", ["Elec"], "support", ["flash", "exhaust", "ignite"])
+support_Pantheon = champion("Patheon", ["PTA"], "support", ["flash", "exhaust", "ignite"])
+support_Tahmkench = champion("Tahmkench", ["GotU", "Guard"], "support", ["flash", "exhaust", "ignite"])
+support_Swain = champion("Swain", ["Con", "Elec"], "support", ["flash", "exhaust", "ignite"])
+support_Janna = champion("Janna", ["AC", "SA"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Amumu = champion("Amumu", ["AS"], "support", ["flash", "exhaust", "ignite"])
+support_Zyra = champion("Zyra", ["AC"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Heimer = champion("Heimer", ["AC"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Fiddlestick = champion("Fiddlestick", ["AC"], "support", ["flash", "heal", "exhaust", "ignite"])
+support_Renata = champion("Renata", ["Guard"], "support", ["flash", "exhaust", "ignite", "heal"])
+support_Veigar = champion("Veigar", ["AC", "FS"], "support", ["flash", "exhaust", "ignite", "heal"])
+
+
+support_champions = [support_Poppy, support_Sena, support_Pyke, support_Xerath, support_Lulu, support_Leblanc, support_Shaco, support_Bard,
+                     support_Taric, support_Blitz, support_Nautilus, support_Thresh, support_Seraphine, support_Barum, support_Rell, support_Alistar, 
+                     support_Zilean, support_Shen, support_Neeko, support_Karma, support_Rakan, support_Lux, support_Maokai, support_Hwei, 
+                     support_Soraka, support_Sona, support_Nami, support_Camille, support_Velkoz, support_Millio, support_Yuumi, support_Zac, 
+                     support_Morgana, support_Galio, support_Brand, support_Zoe, support_Pantheon, support_Swain, support_Janna, support_Amumu, 
+                     support_Zyra, support_Heimer, support_Fiddlestick, support_Renata, support_Veigar]
