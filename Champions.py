@@ -70,6 +70,13 @@ top_champions = [top_Aatrox, top_Nasus, top_Darius, top_Poppy, top_Camille, top_
                  top_Ksante, top_Gragas, top_Tahmkench, top_Quinn, top_Wukong, top_Singed, top_Teemo, top_Trundle, top_Akali, top_Vayne,
                  top_Kyle, top_Chogath
                  ]
+
+top_weight = [12.86, 6.43, 5.71, 2.01, 5.85, 6.28, 5.61, 0.95, 4.21, 1.57, 4.95, 1.15, 3.69, 1.74, 4.18, 1.54, 8.73, 3.02, 1.92, 1.5,
+              3.89, 3.25, 2.34, 6.63, 0.92, 9.18, 1.56, 2.7, 2.02, 3.14, 3.87, 2.8, 4.81, 2.77, 2.31, 2.03, 3.08, 1.36, 1.67, 0.82, 
+              1.97, 8.98, 4.75, 2.6, 1.31, 0.79, 2.21, 0.97, 1.8, 0.93, 1.56, 1.28, 1.04, 0.83]
+
+# print(top_champions.__len__(), top_weight.__len__())
+
 # 打野角色
 jungle_Leesin = champion("Leesin", ["Con", "Elec", "DH"], "jungle", ["flash", "smite"])
 jungle_Lillia = champion("Lillia", ["Con"], "jungle", ["flash", "smite"])
@@ -124,9 +131,15 @@ jungle_Qiyanna = champion("Qiyanna", ["FS", "Elec"], "jungle", ["flash", "smite"
 jungle_champions = [jungle_Leesin, jungle_Lillia, jungle_Reksai, jungle_Noc, top_Warwick, jungle_Shaco, jungle_Khazix, jungle_Belveth,
                     jungle_Xinzhao, jungle_Elise, jungle_Amumu, jungle_Yi, jungle_Skarner, jungle_Ekko, jungle_Karthus, jungle_Taliyah,
                     jungle_Viego, jungle_Evelyn, jungle_Volibear, jungle_Nidalee, jungle_Gwen, jungle_Jarvan, jungle_Talon, jungle_Kayn,
-                    jungle_Briar, jungle_Vi, jungle_Graves, jungle_Ivern, jungle_Zac, jungle_Fiddlestick, jungle_Nunu, jungle_Udyr, top_Wukong,
-                    jungle_Hekarim, jungle_Poppy, jungle_Kindred, jungle_Zyra, jungle_Rammus, jungle_Shyvana, jungle_Diana, jungle_Sjuanni, top_Gragas,
+                    jungle_Briar, jungle_Vi, jungle_Graves, jungle_Ivern, jungle_Zac, jungle_Fiddlestick, jungle_Nunu, jungle_Udyr, jungle_Wukong,
+                    jungle_Hekarim, jungle_Poppy, jungle_Kindred, jungle_Zyra, jungle_Rammus, jungle_Shyvana, jungle_Diana, jungle_Sjuanni, jungle_Gragas,
                     jungle_Brand, jungle_Zed, jungle_Sylas, jungle_Rengar, jungle_Maokai, jungle_Qiyanna]
+
+jungle_weight = [30.13, 9.26, 2, 5.79, 2.56, 4.32, 9.68, 2.12, 5.91, 3.72, 4.25, 3.13, 2.32, 3.43, 3.34, 2.73, 17.19, 1.7,
+                 1.34, 10.83, 1.16, 7.57, 1.69, 2.76, 2.73, 7.45, 6.5, 0.77, 3.33, 2.11, 1.68, 1.66, 1.99, 3.25, 1.49, 2.49, 0.69, 1.38,
+                 1.43, 2.98, 3.68, 2.51, 1.27, 0.9, 3.77, 0.62, 0.97, 0.79]
+
+# print(jungle_champions.__len__(), jungle_weight.__len__())
 
 # 中路角色
 mid_Sylas = champion("Sylas", ["Con", "Elec"], "mid", ["flash", "tp", "ignite"])
@@ -195,6 +208,12 @@ mid_champions = [mid_Sylas, mid_Leblanc, mid_Yone, mid_Hwei, mid_Ahri, mid_Yassu
                  mid_Patheon, mid_Akshan, mid_Gragas, mid_Irelia, mid_Taliyah, mid_Kennen, mid_Ekko, mid_Swain, top_Malphite,
                  mid_Lux, mid_Azir, mid_Quinn, mid_Kassadin, mid_Smolder, mid_Rumble, mid_Tristana, mid_Ziggs, mid_Lucian, mid_Corgi, mid_Zeri]
 
+mid_weight = [11.92, 9.45, 17.06, 7.8, 8.85, 8.31, 4.53, 8.97, 5.67, 3.71, 2.34, 3.83, 3.17, 6.78, 1.66, 3.77, 5.52, 2.19, 1.11, 4.18, 1.45, 3.82,
+              1.09, 2.41, 2.54, 2.06, 2.23, 1.6, 2.42, 2.38, 1.28, 0.99, 1.89, 0.82, 1.89, 2.65, 1.51, 1.82, 1.03, 1.38, 0.64,
+              2.83, 1.28, 0.78, 1.22, 0.56, 0.89, 1.51, 2.03, 0.52, 1.32, 4.35, 0.61, 2.7, 0.86, 0, 1.61, 0.52]
+
+# print(mid_champions.__len__(), mid_weight.__len__())
+
 # 下路角色
 ad_Jhin = champion("Jhin", ["FF"], "ad", ["flash", "barrier", "cleanse"])
 ad_Kaisa = champion("Kaisa", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
@@ -225,6 +244,10 @@ ad_Tristana = champion("Tristana", ["FF", "PTA"], "ad", ["flash", "barrier", "cl
 
 ad_champions = [ad_Jhin, ad_Kaisa, ad_Jinx, ad_Ashe, ad_Ziggs, ad_Swain, ad_Ez, ad_Lucian, ad_Kogmaw, ad_Mf, ad_Twitch, ad_Samira,
                 ad_Draven, ad_Kaitlyn, ad_Seraphine, ad_Sivir, ad_Kalista, ad_Varus, ad_Xayah, ad_Zeri, ad_Aphelios, ad_Hwei, ad_Smolder, ad_Vayne, ad_Tristana]
+
+ad_weight = [38.6, 26.91, 19.52, 12.05, 9.7, 0.67, 19.76, 8.63, 1.45, 7.43, 1.44, 4.02, 2.75, 9.76, 0.56, 2.77, 1.56, 6.37, 2.58, 4.59, 3.82, 1.32, 5.87, 1.52, 0.69]
+
+# print(ad_champions.__len__(), ad_weight.__len__())
 
 # 輔助角色
 support_Poppy = champion("Poppy", ["HoB", "AS"], "support", ["flash", "exhaust", "ignite"])
@@ -282,3 +305,8 @@ support_champions = [support_Poppy, support_Sena, support_Pyke, support_Xerath, 
                      support_Soraka, support_Sona, support_Nami, support_Camille, support_Velkoz, support_Millio, support_Yuumi, support_Zac, 
                      support_Morgana, support_Galio, support_Brand, support_Zoe, support_Pantheon, support_Swain, support_Janna, support_Amumu, 
                      support_Zyra, support_Heimer, support_Fiddlestick, support_Renata, support_Veigar]
+
+support_weight = [7.99, 10.98, 7.63, 9.31, 12.78, 1.3, 2.21, 4.69, 0.85, 10.75, 11.84, 12.37, 4.94, 5.34, 6.15, 6.43, 2.25, 0.77, 1.81, 8.22, 5, 5.88,
+                  2.19, 1.56, 2.86, 1.03, 2.93, 1.45, 1.52, 2.31, 5.74, 1.07, 3.29, 0.55, 1.17, 0.62, 1.69, 1.34, 1.27, 1.09, 2.44, 0.56, 0.68, 0.66, 0.59]
+
+# print(support_champions.__len__(), support_weight.__len__())

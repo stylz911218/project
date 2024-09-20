@@ -1,5 +1,5 @@
 from object import home, turret, camp, champion, inhibitor, largecamp
-from Champions import top_champions, ad_champions, mid_champions, jungle_champions, support_champions, jungle_Lillia, jungle_Leesin, jungle_Khazix
+from Champions import top_champions, ad_champions, mid_champions, jungle_champions, support_champions, jungle_Lillia, jungle_Leesin, jungle_Khazix, top_weight, jungle_weight, mid_weight, ad_weight, support_weight
 import random
 
 # action space: 0 =  scuttler, 1 = drake, 2 = grubs, 3 = herald, 4 = baron, 5 = elder, 6 = clean own jungle, 7 = invade enemy jungle
@@ -120,10 +120,10 @@ def analyze_drakes(drakes):
 # 敵軍資料
 # 角色
 def generate_ally_champions():
-    ally_top = random.choice(top_champions)
-    ally_mid = random.choice(mid_champions)
-    ally_bot = random.choice(ad_champions)
-    ally_sup = random.choice(support_champions)
+    ally_top = random.choices(top_champions, weights=top_weight, k=1)[0]
+    ally_mid = random.choices(mid_champions, weights=mid_weight, k=1)[0]
+    ally_bot = random.choices(ad_champions, weights=ad_weight, k=1)[0]
+    ally_sup = random.choices(support_champions, weights=support_weight, k=1)[0]
     return ally_top, ally_mid, ally_bot, ally_sup
 
 def generate_player_champion():
@@ -131,25 +131,25 @@ def generate_player_champion():
     return player
 
 def generate_enemy_champions(ally_top, player, ally_mid, ally_bot, ally_sup):
-    enemy_top = random.choice(top_champions)
+    enemy_top = random.choices(top_champions, weights=top_weight, k=1)[0]
     while enemy_top.name == ally_top.name or enemy_top.name == player.name or enemy_top.name == ally_mid.name or enemy_top.name == ally_bot.name or enemy_top.name == ally_sup.name:
-        enemy_top = random.choice(top_champions)
+        enemy_top = random.choices(top_champions, weights=top_weight, k=1)[0]
 
-    enemy_jg = random.choice(jungle_champions)
+    enemy_jg = random.choices(jungle_champions, weights=jungle_weight, k=1)[0]
     while enemy_jg.name == ally_top.name or enemy_jg.name == player.name or enemy_jg.name == ally_mid.name or enemy_jg.name == ally_bot.name or enemy_jg.name == ally_sup.name:
-        enemy_jg = random.choice(jungle_champions)
+        enemy_jg = random.choices(jungle_champions, weights=jungle_weight, k=1)[0]
     
-    enemy_mid = random.choice(mid_champions)
+    enemy_mid = random.choices(mid_champions, weights=mid_weight, k=1)[0]
     while enemy_mid.name == ally_top.name or enemy_mid.name == player.name or enemy_mid.name == ally_mid.name or enemy_mid.name == ally_bot.name or enemy_mid.name == ally_sup.name:
-        enemy_mid = random.choice(mid_champions)
+        enemy_mid = random.choices(mid_champions, weights=mid_weight, k=1)[0]
 
-    enemy_bot = random.choice(ad_champions)
+    enemy_bot = random.choices(ad_champions, weights=ad_weight, k=1)[0]
     while enemy_bot.name == ally_top.name or enemy_bot.name == player.name or enemy_bot.name == ally_mid.name or enemy_bot.name == ally_bot.name or enemy_bot.name == ally_sup.name:
-        enemy_bot = random.choice(ad_champions)
+        enemy_bot = random.choices(ad_champions, weights=ad_weight, k=1)[0]
 
-    enemy_sup = random.choice(support_champions)
+    enemy_sup = random.choices(support_champions, weights=support_weight, k=1)[0]
     while enemy_sup.name == ally_top.name or enemy_sup.name == player.name or enemy_sup.name == ally_mid.name or enemy_sup.name == ally_bot.name or enemy_sup.name == ally_sup.name:
-        enemy_sup = random.choice(support_champions)
+        enemy_sup = random.choices(support_champions, weights=support_weight, k=1)[0]
 
     return enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup
 
