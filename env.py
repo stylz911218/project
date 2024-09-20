@@ -1,4 +1,5 @@
 from object import home, turret, camp, champion, inhibitor, largecamp
+from Champions import top_champions, ad_champions, mid_champions, jungle_champions, support_champions, jungle_Lillia, jungle_Leesin, jungle_Khazix
 import random
 
 # action space: 0 =  scuttler, 1 = drake, 2 = grubs, 3 = herald, 4 = baron, 5 = elder, 6 = clean own jungle, 7 = invade enemy jungle
@@ -66,7 +67,7 @@ def generate_drake_info(drakecount, current_game_seconds):
             drake_type = drakes[2]["type"]
 
         # 確保小龍的擊殺時間合理
-        min_drake_time = last_drake_time + 320  # 每條小龍至少5分鐘間隔
+        min_drake_time = last_drake_time + 330  # 每條小龍至少5分鐘間隔
         remaining_drakes = drakecount - i
         max_drake_time = current_game_seconds - (remaining_drakes - 1) * 320  # 確保剩餘小龍有足夠時間生成
 
@@ -118,6 +119,40 @@ def analyze_drakes(drakes):
 
 # 敵軍資料
 # 角色
+def generate_ally_champions():
+    ally_top = random.choice(top_champions)
+    ally_mid = random.choice(mid_champions)
+    ally_bot = random.choice(ad_champions)
+    ally_sup = random.choice(support_champions)
+    return ally_top, ally_mid, ally_bot, ally_sup
+
+def generate_player_champion():
+    player = random.choice((jungle_Lillia, jungle_Leesin, jungle_Khazix))
+    return player
+
+def generate_enemy_champions(ally_top, player, ally_mid, ally_bot, ally_sup):
+    enemy_top = random.choice(top_champions)
+    while enemy_top.name == ally_top.name or enemy_top.name == player.name or enemy_top.name == ally_mid.name or enemy_top.name == ally_bot.name or enemy_top.name == ally_sup.name:
+        enemy_top = random.choice(top_champions)
+
+    enemy_jg = random.choice(jungle_champions)
+    while enemy_jg.name == ally_top.name or enemy_jg.name == player.name or enemy_jg.name == ally_mid.name or enemy_jg.name == ally_bot.name or enemy_jg.name == ally_sup.name:
+        enemy_jg = random.choice(jungle_champions)
+    
+    enemy_mid = random.choice(mid_champions)
+    while enemy_mid.name == ally_top.name or enemy_mid.name == player.name or enemy_mid.name == ally_mid.name or enemy_mid.name == ally_bot.name or enemy_mid.name == ally_sup.name:
+        enemy_mid = random.choice(mid_champions)
+
+    enemy_bot = random.choice(ad_champions)
+    while enemy_bot.name == ally_top.name or enemy_bot.name == player.name or enemy_bot.name == ally_mid.name or enemy_bot.name == ally_bot.name or enemy_bot.name == ally_sup.name:
+        enemy_bot = random.choice(ad_champions)
+
+    enemy_sup = random.choice(support_champions)
+    while enemy_sup.name == ally_top.name or enemy_sup.name == player.name or enemy_sup.name == ally_mid.name or enemy_sup.name == ally_bot.name or enemy_sup.name == ally_sup.name:
+        enemy_sup = random.choice(support_champions)
+
+    return enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup
+
 def enemy():
     pass
 
@@ -601,6 +636,15 @@ def main():
     print("Actions available: ")
     for i in range(len(actions)):
         print(action_space[actions[i]])
+
+    print("\n")
+
+    ally_top, ally_mid, ally_bot, ally_sup = generate_ally_champions()
+    player = generate_player_champion()
+    enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup = generate_enemy_champions(ally_top, player, ally_mid, ally_bot, ally_sup)
+
+    print(f'{ally_top.name}, {player.name}, {ally_mid.name}, {ally_bot.name}, {ally_sup.name}')
+    print(f'{enemy_top.name}, {enemy_jg.name}, {enemy_mid.name}, {enemy_bot.name}, {enemy_sup.name}')
 
 if __name__ == "__main__":
     main()

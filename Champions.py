@@ -1,5 +1,4 @@
 from object import champion
-from env import summoners_spell
 
 # 核心符文:強攻,瞬疾步法,征服者, 電刑,靈魂收割,叢刃, 艾黎,彗星,相位, 不滅,餘震,神聖守護, 冰川,啟封法書,先攻
 key_runes = ["PTA", "FF", "Con", 
