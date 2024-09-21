@@ -1,5 +1,5 @@
 from object import home, turret, camp, champion, inhibitor, largecamp
-from Champions import top_champions, ad_champions, mid_champions, jungle_champions, support_champions, jungle_Lillia, jungle_Leesin, jungle_Khazix, top_weight, jungle_weight, mid_weight, ad_weight, support_weight
+from Champions import top_champions, ad_champions, mid_champions, jungle_champions, support_champions,  jungle_Leesin, jungle_Khazix, top_weight, jungle_weight, mid_weight, ad_weight, support_weight
 import random
 
 # action space: 0 =  scuttler, 1 = drake, 2 = grubs, 3 = herald, 4 = baron, 5 = elder, 6 = clean own jungle, 7 = invade enemy jungle
@@ -10,18 +10,18 @@ draketype = ["ocean", "mountain", "cloud", "chemtech", "hextech", "infernal"]
 
 summoners_spell = ["heal", "ghost", "barrier", "exhaust", "clarity", "flash", "tp", "smite", "cleanse", "ignite"]
 
+top_summoners_weight = {"flash": 80,"tp": 80,"ignite": 25,"ghost": 2, "barrier": 1}
+
+mid_summoners_weight = {"flash": 80,"tp": 50,"ignite": 20,"ghost": 5, "barrier": 1, "cleanse": 1}
+
+bot_summoners_weight = {"flash": 80,"tp": 5,"ignite": 0,"ghost": 1, "barrier": 50, "cleanse": 15}
+
+sup_summoners_weight = {"flash": 80, "exhaust": 20, "ignite": 20, "heal": 10}
+
 # position: mid = 0, top = -2, bot lane = 2, own jungle = 1, enemy jungle = 1.5, drake and baron pool = 1.2
-locations = {
-    "mid_lane": 0,
-    "top_lane": -2,
-    "bottom_lane": 2,
-    "ally_top_jungle": -1,
-    "ally_bot_jungle": 1,
-    "enemy_top_jungle": -1.5,
-    "enemy_bot_jungle": 1.5,
-    "drake_pit": 1.2,
-    "baron_pit": -1.2
-}
+locations = [0, -2, 2, -1, 1, -1.5, 1.5, 1.2, -1.2]
+    
+
 
 # 當前時間 (先嘗試隨機生成，後續可以進行更改)
 def generate_random_game_time():
@@ -117,19 +117,52 @@ def analyze_drakes(drakes):
     
     return ancient_dragon_generated, ally_drake_count, enemy_drake_count
 
-# 敵軍資料
-# 角色
+# 角色資料
+
+# 生成召喚師技能
+def select_summoner_skills(champion, weight):
+    # 先確保必須的技能在選擇列表中
+    selected_skills = []
+    if champion.position == "jungle":
+        selected_skills.append("smite")  # 打野必須帶重擊
+    
+    if champion.position == "ad" or champion.position == "mid":
+        selected_skills.append("flash") 
+
+    if champion.position == "support" and not (champion.name == "Yuumi" or champion.name == "Shaco"):
+        selected_skills.append("flash") 
+
+    # 獲取可以選擇的技能
+    available_skills = [skill for skill in champion.correctsummoners if skill not in selected_skills]
+
+    # 隨機選擇一個或多個技能
+    while len(selected_skills) < 2:  # 確保至少選兩個技能
+        skill = random.choices(list(weight.keys()), weights=list(weight.values()), k=1)[0]
+        if skill in available_skills and skill not in selected_skills:
+            selected_skills.append(skill)
+
+    return selected_skills
+
+# 生成友軍
 def generate_ally_champions():
     ally_top = random.choices(top_champions, weights=top_weight, k=1)[0]
     ally_mid = random.choices(mid_champions, weights=mid_weight, k=1)[0]
     ally_bot = random.choices(ad_champions, weights=ad_weight, k=1)[0]
     ally_sup = random.choices(support_champions, weights=support_weight, k=1)[0]
+
+    ally_top.team_now(1)
+    ally_mid.team_now(1)
+    ally_bot.team_now(1)
+    ally_sup.team_now(1)
+
     return ally_top, ally_mid, ally_bot, ally_sup
 
+# 生成玩家
 def generate_player_champion():
-    player = random.choice((jungle_Lillia, jungle_Leesin, jungle_Khazix))
+    player = random.choice((jungle_Leesin, jungle_Khazix))
     return player
 
+# 生成敵軍
 def generate_enemy_champions(ally_top, player, ally_mid, ally_bot, ally_sup):
     enemy_top = random.choices(top_champions, weights=top_weight, k=1)[0]
     while enemy_top.name == ally_top.name or enemy_top.name == player.name or enemy_top.name == ally_mid.name or enemy_top.name == ally_bot.name or enemy_top.name == ally_sup.name:
@@ -151,9 +184,94 @@ def generate_enemy_champions(ally_top, player, ally_mid, ally_bot, ally_sup):
     while enemy_sup.name == ally_top.name or enemy_sup.name == player.name or enemy_sup.name == ally_mid.name or enemy_sup.name == ally_bot.name or enemy_sup.name == ally_sup.name:
         enemy_sup = random.choices(support_champions, weights=support_weight, k=1)[0]
 
+    enemy_top.team_now(-1)
+    enemy_jg.team_now(-1)
+    enemy_mid.team_now(-1)
+    enemy_bot.team_now(-1)
+    enemy_sup.team_now(-1)
+
     return enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup
 
-def enemy():
+# TODO
+# 生成角色評分
+# neutralcamp = [scuttler, drake, grub, herald, baron, elder]
+def generate_ally_value(top, mid, bot, sup, current_game_seconds, neural_camps, player_location):
+    minutes, seconds = divmod(current_game_seconds, 60)
+    
+    # 符文
+    top_keystone = random.choice(top.correctkeystone)
+    mid_keystone = random.choice(mid.correctkeystone)
+    bot_keystone = random.choice(bot.correctkeystone)
+    sup_keystone = random.choice(sup.correctkeystone)
+
+    print(f"Top: {top_keystone}, Mid: {mid_keystone}, Bot: {bot_keystone}, Sup: {sup_keystone}")
+
+    # 召喚師技能
+    top_selected_skills = select_summoner_skills(top, top_summoners_weight)
+    top.summoners_now(top_selected_skills)
+
+    mid_selected_skills = select_summoner_skills(mid, mid_summoners_weight)
+    mid.summoners_now(mid_selected_skills)
+
+    bot_selected_skills = select_summoner_skills(bot, bot_summoners_weight)
+    bot.summoners_now(bot_selected_skills)
+
+    sup_selected_skills = select_summoner_skills(sup, sup_summoners_weight)
+    sup.summoners_now(sup_selected_skills)
+
+    print(f"Top: {top.summoners}, Mid: {mid.summoners}, Bot: {bot.summoners}, Sup: {sup.summoners} \n")
+
+    # 當前角色位置
+    # locations = [0, -2, 2, -1, 1, -1.5, 1.5, 1.2, -1.2]
+    top_location_weight = []
+    mid_location_weight = []
+    bot_location_weight = []
+    sup_location_weight = []
+
+    if minutes <= 14:
+        top_location_weight = [0, 100, 0, 0, 0, 0, 0, 0, 0.01]
+        mid_location_weight = [100, 0, 0, 0.0001, 0.0001, 0, 0, 0.01, 0.01]
+        bot_location_weight = [0, 0, 100, 0, 0, 0, 0, 0.01, 0]
+        sup_location_weight = [0.0001, 0.01, 80, 0.001, 0.001, 0, 0, 0.01, 0.01]
+
+    elif neural_camps[3].alive: # Herald
+        top_location_weight = [0, 10, 0, 0.001, 0.001, 0, 0, 0.001, 10]
+        mid_location_weight = [5, 0, 15, 0.0001, 0.0001, 0, 0, 0.001, 10]
+        bot_location_weight = [15, 0, 0, 0.0001, 0.0001, 0, 0, 0.001, 10]
+        sup_location_weight = [8, 0.001, 0.1, 0.05, 0.01, 0.05, 0.01, 0.001, 10]
+
+    elif neural_camps[1].alive or neural_camps[5].alive: # Drake
+        top_location_weight = [0, 10, 0, 0.001, 0.001, 0, 0, 0.01, 0.01]
+        mid_location_weight = [2, 0, 15, 0.0001, 0.0001, 0, 0, 10, 0.001]
+        bot_location_weight = [15, 0, 0, 0.0001, 0.0001, 0, 0, 10, 0.001]
+        sup_location_weight = [8, 0.001, 0.1, 0.01, 0.05, 0.01, 0.05, 10, 0.001]
+
+    else:
+        top_location_weight = [0, 10, 0, 0.001, 0.001, 0, 0, 0.01, 0.01]
+        mid_location_weight = [5, 0, 5, 0.001, 0.001, 0, 0, 0.01, 0.01]
+        bot_location_weight = [10, 0, 0, 0.001, 0.001, 0, 0, 0.01, 0.01]
+        sup_location_weight = [8, 0.1, 0.1, 0.1, 0.1, 0.001, 0.001, 0.01, 0.01]
+
+    top_location = random.choices(locations,weights=top_location_weight,k=1)[0]
+    mid_location = random.choices(locations,weights=mid_location_weight,k=1)[0]
+    bot_location = random.choices(locations,weights=bot_location_weight,k=1)[0]
+    sup_location = random.choices(locations,weights=sup_location_weight,k=1)[0]
+
+    top.state_value(-1, -1, top_keystone, top_location, player_location, 1, 1, random.choice([0,1]))
+    mid.state_value(-1, -1, mid_keystone, mid_location, player_location, 1, 1, random.choice([0,1]))
+    bot.state_value(-1, -1, bot_keystone, bot_location, player_location, 1, 1, random.choice([0,1]))
+    sup.state_value(-1, -1, sup_keystone, sup_location, player_location, 1, 1, random.choice([0,1]))
+
+
+# TODO
+def generate_player_value(current_game_seconds, neural_camps):
+    minutes, seconds = divmod(current_game_seconds, 60)
+
+
+    pass
+
+# TODO
+def generate_enemy_value():
     pass
 
 # 防禦塔
@@ -161,9 +279,6 @@ def enemyturret():
     pass
 
 # 友軍資料
-# 角色
-def ally():
-    pass
 
 # 防禦塔
 def allyturret():
@@ -618,21 +733,21 @@ def main():
 
     print(f'Drake slained: {truedrakecount}')
 
-    ally, enemy, neutral = junglecamp(current_game_time, drakecount=truedrakecount, drakes=drakes)
-    actions = available_actions(ally=ally, enemy=enemy, neutral=neutral)
+    ally_camp, enemy_camp, neutral_camp = junglecamp(current_game_time, drakecount=truedrakecount, drakes=drakes)
+    actions = available_actions(ally=ally_camp, enemy=enemy_camp, neutral=neutral_camp)
 
     print("\n")
 
-    print("Ally camp:")
-    for i in ally:
-        print(f'{i.__dict__}')
+    # print("Ally camp:")
+    # for i in ally:
+    #     print(f'{i.__dict__}')
 
 
-    print("Enemy camp:")
-    for i in enemy:
-        print(f'{i.__dict__}')
+    # print("Enemy camp:")
+    # for i in enemy:
+    #     print(f'{i.__dict__}')
 
-    print("\n")
+    # print("\n")
     print("Actions available: ")
     for i in range(len(actions)):
         print(action_space[actions[i]])
@@ -643,8 +758,10 @@ def main():
     player = generate_player_champion()
     enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup = generate_enemy_champions(ally_top, player, ally_mid, ally_bot, ally_sup)
 
-    print(f'{ally_top.name}, {player.name}, {ally_mid.name}, {ally_bot.name}, {ally_sup.name}')
-    print(f'{enemy_top.name}, {enemy_jg.name}, {enemy_mid.name}, {enemy_bot.name}, {enemy_sup.name}')
+    print(f'Our Team: {ally_top.name}, {player.name}, {ally_mid.name}, {ally_bot.name}, {ally_sup.name}')
+    print(f'Enemy Team: {enemy_top.name}, {enemy_jg.name}, {enemy_mid.name}, {enemy_bot.name}, {enemy_sup.name}\n')
+
+    generate_ally_value(ally_top, ally_mid, ally_bot, ally_sup, current_game_seconds, neutral_camp, 0)
 
 if __name__ == "__main__":
     main()
