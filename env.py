@@ -23,6 +23,21 @@ def generate_random_game_time():
     minutes, seconds = divmod(total_seconds, 60)  
     return f'{minutes:02d}:{seconds:02d}', total_seconds
 
+# 指定時間
+def generate_specific_game_time():
+    early_times = [5, 6, 10]  # 早期階段的固定分鐘數
+    mid_times = list(range(14, 21))  # 14-20 分鐘之間的整數
+    late_times = list(range(20, 61, 3))  # 20 分鐘後每 3 分鐘到最多 60 分鐘
+
+    # 將所有可能的時間合併成一個列表
+    all_possible_times = early_times + mid_times + late_times
+
+    minutes = random.choice(all_possible_times)
+
+    total_seconds = minutes * 60
+
+    return f'{minutes:02d}:{0:02d}', total_seconds
+
 # 角色資料
 
 # 生成召喚師技能
@@ -697,7 +712,7 @@ def available_actions(ally, enemy, neutral):
 # 設計可能情況
 
 def main():
-    current_game_time, current_game_seconds = generate_random_game_time()
+    current_game_time, current_game_seconds = generate_specific_game_time()
     print(f'Current game time: {current_game_time}')
 
     drakecount = 0
