@@ -7,6 +7,16 @@ key_runes = ["PTA", "FF", "Con",
              "GotU", "AS", "Guard", 
              "GA", "US", "FS" ]
 
+top_summoners_weight = {"flash": 80,"tp": 80,"ignite": 25,"ghost": 2, "barrier": 1}
+
+jg_summoners_weight = {"flash": 100,"smite": 100,"ignite": 50,"ghost": 1, "exhaust": 20}
+
+mid_summoners_weight = {"flash": 80,"tp": 50,"ignite": 20,"ghost": 5, "barrier": 1, "cleanse": 1}
+
+bot_summoners_weight = {"flash": 80,"tp": 5,"ignite": 0,"ghost": 1, "barrier": 50, "cleanse": 15}
+
+sup_summoners_weight = {"flash": 80, "exhaust": 20, "ignite": 20, "heal": 10}
+
 # 上路角色
 top_Aatrox = champion("Aatrox", ["Con", "AC"], "top", ["flash", "tp", "ignite", "barrier"])
 top_Nasus = champion("Nasus", ["FF", "SA"], "top", ["flash", "tp", "ghost"])
@@ -122,7 +132,7 @@ jungle_Sjuanni = champion("Sjuanni", ["AS"], "jungle", ["flash", "smite", "ghost
 jungle_Gragas = champion("Gragas", ["DH"], "jungle", ["flash", "smite"])
 jungle_Brand = champion("Brand", ["DH", "Elec"], "jungle", ["flash", "smite", "ghost"])
 jungle_Zed = champion("Zed", ["FS", "DH", "Elec"], "jungle", ["flash", "smite", "ghost"])
-jungle_Sylas = champion("Sylas", ["DH", "Elec"], "jungle", ["flash", "smite", "ignite"])
+jungle_Sylas = champion("Sylas", ["DH", "Elec"], "jungle", ["flash", "smite"])
 jungle_Rengar = champion("Rengar", ["Con", "Elec", "DH"], "jungle", ["flash", "smite", "ghost"])
 jungle_Maokai = champion("Maokai", ["PR", "AS"], "jungle", ["flash", "smite", "ghost"])
 jungle_Qiyanna = champion("Qiyanna", ["FS", "Elec"], "jungle", ["flash", "smite", "ignite"])
@@ -215,32 +225,32 @@ mid_weight = [11.92, 9.45, 17.06, 7.8, 8.85, 8.31, 4.53, 8.97, 5.67, 3.71, 2.34,
 # print(mid_champions.__len__(), mid_weight.__len__())
 
 # 下路角色
-ad_Jhin = champion("Jhin", ["FF"], "ad", ["flash", "barrier", "cleanse"])
-ad_Kaisa = champion("Kaisa", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Jinx = champion("Jinx", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Ashe = champion("Ashe", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Ziggs = champion("Ziggs", ["AC"], "ad", ["flash", "tp", "barrier"])
-ad_Swain = champion("Swain", ["Con"], "ad", ["flash", "exhaust", "ghost"])
-ad_Ez = champion("Ez", ["Con", "PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Lucian = champion("Lucian", ["PTA", "FS"], "ad", ["flash", "cleanse", "barrier"])
-ad_Kogmaw = champion("Kogmaw", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Mf = champion("Mf", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Twitch = champion("Twitch", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Samira = champion("Samira", ["Con"], "ad", ["flash", "barrier", "cleanse"])
-ad_Draven = champion("Draven", ["PTA", "HoB"], "ad", ["flash", "barrier", "cleanse"])
-ad_Kaitlyn = champion("Kaitlyn", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Seraphine = champion("Seraphine", ["SA"], "ad", ["flash", "barrier", "tp"])
-ad_Sivir = champion("Sivir", ["FF", "FS"], "ad", ["flash", "barrier", "tp"])
-ad_Kalista = champion("Kalista", ["PTA", "HoB"], "ad", ["flash", "barrier", "cleanse"])
-ad_Varus = champion("Varus", ["PTA", "AC"], "ad", ["flash", "barrier", "cleanse"])
-ad_Xayah = champion("Xayah", ["PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Zeri = champion("Zeri", ["FF"], "ad", ["flash", "barrier", "cleanse"])
-ad_Aphelios = champion("Aphelios", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
-ad_Hwei = champion("Hwei", ["AC"], "ad", ["flash", "tp", "barrier"])
-ad_Smolder = champion("Smolder", ["FF"], "ad", ["flash", "tp", "barrier"])
-ad_Nilah = champion("Nilah", ["Con"], "ad", ["flash", "barrier", "cleanse"])
-ad_Vayne = champion("Vayne", ["PTA", "FF", "GotU"], "ad", ["flash", "barrier", "cleanse"])
-ad_Tristana = champion("Tristana", ["FF", "PTA"], "ad", ["flash", "barrier", "cleanse"])
+ad_Jhin = champion("Jhin", ["FF"], "bot", ["flash", "barrier", "cleanse"])
+ad_Kaisa = champion("Kaisa", ["FF", "PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Jinx = champion("Jinx", ["PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Ashe = champion("Ashe", ["FF", "PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Ziggs = champion("Ziggs", ["AC"], "bot", ["flash", "tp", "barrier"])
+ad_Swain = champion("Swain", ["Con"], "bot", ["flash", "exhaust", "ghost"])
+ad_Ez = champion("Ez", ["Con", "PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Lucian = champion("Lucian", ["PTA", "FS"], "bot", ["flash", "cleanse", "barrier"])
+ad_Kogmaw = champion("Kogmaw", ["PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Mf = champion("Mf", ["PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Twitch = champion("Twitch", ["PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Samira = champion("Samira", ["Con"], "bot", ["flash", "barrier", "cleanse"])
+ad_Draven = champion("Draven", ["PTA", "HoB"], "bot", ["flash", "barrier", "cleanse"])
+ad_Kaitlyn = champion("Kaitlyn", ["FF", "PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Seraphine = champion("Seraphine", ["SA"], "bot", ["flash", "barrier", "tp"])
+ad_Sivir = champion("Sivir", ["FF", "FS"], "bot", ["flash", "barrier", "tp"])
+ad_Kalista = champion("Kalista", ["PTA", "HoB"], "bot", ["flash", "barrier", "cleanse"])
+ad_Varus = champion("Varus", ["PTA", "AC"], "bot", ["flash", "barrier", "cleanse"])
+ad_Xayah = champion("Xayah", ["PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Zeri = champion("Zeri", ["FF"], "bot", ["flash", "barrier", "cleanse"])
+ad_Aphelios = champion("Aphelios", ["FF", "PTA"], "bot", ["flash", "barrier", "cleanse"])
+ad_Hwei = champion("Hwei", ["AC"], "bot", ["flash", "tp", "barrier"])
+ad_Smolder = champion("Smolder", ["FF"], "bot", ["flash", "tp", "barrier"])
+ad_Nilah = champion("Nilah", ["Con"], "bot", ["flash", "barrier", "cleanse"])
+ad_Vayne = champion("Vayne", ["PTA", "FF", "GotU"], "bot", ["flash", "barrier", "cleanse"])
+ad_Tristana = champion("Tristana", ["FF", "PTA"], "bot", ["flash", "barrier", "cleanse"])
 
 ad_champions = [ad_Jhin, ad_Kaisa, ad_Jinx, ad_Ashe, ad_Ziggs, ad_Swain, ad_Ez, ad_Lucian, ad_Kogmaw, ad_Mf, ad_Twitch, ad_Samira,
                 ad_Draven, ad_Kaitlyn, ad_Seraphine, ad_Sivir, ad_Kalista, ad_Varus, ad_Xayah, ad_Zeri, ad_Aphelios, ad_Hwei, ad_Smolder, ad_Vayne, ad_Tristana]
