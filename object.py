@@ -54,6 +54,15 @@ class champion:
     def team_now(self, ally):
         self.team = ally
 
+    # 紅 or 藍, 紅 = -1, 藍 = 1
+    def red_or_blue(self, side):
+        self.side = side
+
+    # 現在位置
+    def current_place(self, zone, location):
+        self.zone = zone
+        self.location = location
+
     # TODO
     # 狀態評分
     def state_value(self, hp_now, mana_now, keystone, current_location, player_location ,summoners1_, summoners2_, alive):
@@ -96,6 +105,7 @@ class champion:
             self.value += 20
         
         # 位置
+        # TODO
         if 0 < abs(current_location - player_location) <= 1:
             self.value += self.team * 30
         elif 1 < abs(current_location - player_location) < 2.7:

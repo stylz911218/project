@@ -1,5 +1,6 @@
 from object import home, turret, camp, inhibitor, largecamp
 from map import zones, MapZone, generate_random_point_in_zone
+from map import top_get_zones_and_weights_for_time, jg_get_zones_and_weights_for_time, mid_get_zones_and_weights_for_time, bot_get_zones_and_weights_for_time, sup_get_zones_and_weights_for_time
 from Champions import top_champions, ad_champions, mid_champions, jungle_champions, support_champions, jungle_Khazix
 from Champions import top_weight, jungle_weight, mid_weight, ad_weight, support_weight
 from Champions import top_summoners_weight, jg_summoners_weight, mid_summoners_weight, bot_summoners_weight, sup_summoners_weight
@@ -12,6 +13,8 @@ action_space = ["take scuttler", "take drake", "take grubs", "take herald", "tak
 draketype = ["ocean", "mountain", "cloud", "chemtech", "hextech", "infernal"]
 
 summoners_spell = ["heal", "ghost", "barrier", "exhaust", "clarity", "flash", "tp", "smite", "cleanse", "ignite"]
+
+grub_slain_by = None
 
 # position: mid = 0, top = -2, bot lane = 2, own jungle = 1, enemy jungle = 1.5, drake and baron pool = 1.2
 # locations = [0, -2, 2, -1, 1, -1.5, 1.5, 1.2, -1.2]
@@ -212,7 +215,7 @@ def get_last_drake_time(current_game_seconds, drakecount, drakes):
 # 生成小龍信息
 def generate_drake_info(drakecount, current_game_seconds):
     if drakecount == 0:
-        return []
+        return [], 0, 0
 
     drakes = []
     last_drake_time = 0
@@ -268,7 +271,7 @@ def generate_drake_info(drakecount, current_game_seconds):
                 drakes.append({"time": f'{minutes:02d}:{seconds:02d}', "type": drake_type, "slain_by": "enemy"})
             break  # 停止生成後續小龍
 
-    return drakes
+    return drakes, ally_drake_count, enemy_drake_count
 
 # 計算龍數量
 def analyze_drakes(drakes):
@@ -597,7 +600,9 @@ def junglecamp(time, drakecount, drakes):
             # killed time
             killed_time = random.randint(375, timenow)
             minutes, seconds = divmod(killed_time, 60)
-            print(f'First grubs were killed at {minutes:02d}:{seconds:02d}')
+            slain_by = random.choice(["ally", "enemy"])
+            grub_slain_by = slain_by
+            print(f'First grubs were killed at {minutes:02d}:{seconds:02d} and slain by {grub_slain_by}')
             if killed_time > 585: # won't respawn
                 grub = largecamp(alive=-1, respawn_countdown=0, buff="Won't respawn", value=90)
             else:
@@ -723,7 +728,7 @@ def main():
     else:
         drakecount = random.randint(0,temp)
     
-    drakes = generate_drake_info(drakecount, current_game_seconds)
+    drakes, ally_drake_count, enemy_drake_count = generate_drake_info(drakecount, current_game_seconds)
     truedrakecount = 0
     for i in drakes:
         print(i)
@@ -762,6 +767,8 @@ def main():
     generate_player_sum_and_runes(player)
     generate_ally_sum_and_runes(ally_top, ally_mid, ally_bot, ally_sup)
     generate_enemy_sum_and_runes(enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup)
+
+
 
 if __name__ == "__main__":
     main()
