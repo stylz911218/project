@@ -14,8 +14,6 @@ draketype = ["ocean", "mountain", "cloud", "chemtech", "hextech", "infernal"]
 
 summoners_spell = ["heal", "ghost", "barrier", "exhaust", "clarity", "flash", "tp", "smite", "cleanse", "ignite"]
 
-grub_slain_by = None
-
 # position: mid = 0, top = -2, bot lane = 2, own jungle = 1, enemy jungle = 1.5, drake and baron pool = 1.2
 # locations = [0, -2, 2, -1, 1, -1.5, 1.5, 1.2, -1.2]
 
@@ -188,8 +186,83 @@ def generate_enemy_sum_and_runes(top, jg, mid, bot, sup):
     print(f"Enemy: Top: {top.summoners}, Jg: {jg.summoners} ,Mid: {mid.summoners}, Bot: {bot.summoners}, Sup: {sup.summoners} \n")
 
 # TODO
-def generate_position(current_game_second, ally_top, player, ally_mid, ally_bot, ally_sup, enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup):
-    pass
+def generate_ally_position(current_game_time, side, neutral_camp, ally_drake_count, enemy_drake_count, grub_slain_by, baron_slain_by, elder_slain_by):
+    
+    # player
+    player_possible_zone, player_weight = jg_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, grub_slain_by=grub_slain_by, drake_alive=neutral_camp[1].alive, 
+                                      grubs_alive=neutral_camp[2].alive, herald_alive=neutral_camp[3].alive, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=1)
+    
+    player_chosen_zone = random.choices(player_possible_zone, player_weight)[0]
+    player_position = generate_random_point_in_zone(player_chosen_zone)
+    print(f"At time {current_game_time} minutes, player in zone {player_chosen_zone.name}, the position is {player_position}")
+
+    # top
+    top_possible_zone, top_weight = top_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, jungle_zone=player_chosen_zone, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=1)
+    top_chosen_zone = random.choices(top_possible_zone, top_weight)[0]
+    top_position = generate_random_point_in_zone(top_chosen_zone)
+    print(f"At time {current_game_time} minutes, ally top in zone {top_chosen_zone.name}, the position is {top_position}")
+
+    # mid
+    mid_possible_zone, mid_weight = mid_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, jungle_zone=player_chosen_zone, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=1)
+    mid_chosen_zone = random.choices(mid_possible_zone, mid_weight)[0]
+    mid_position = generate_random_point_in_zone(mid_chosen_zone)
+    print(f"At time {current_game_time} minutes, ally mid in zone {mid_chosen_zone.name}, the position is {mid_position}")
+
+    # bot
+    bot_possible_zone, bot_weight = bot_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, jungle_zone=player_chosen_zone, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=1)
+    bot_chosen_zone = random.choices(bot_possible_zone, bot_weight)[0]
+    bot_position = generate_random_point_in_zone(bot_chosen_zone)
+    print(f"At time {current_game_time} minutes, ally bot in zone {bot_chosen_zone.name}, the position is {bot_position}")
+
+    # sup
+    sup_possible_zone, sup_weight = bot_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, jungle_zone=player_chosen_zone, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=1)
+    sup_chosen_zone = random.choices(sup_possible_zone, sup_weight)[0]
+    sup_position = generate_random_point_in_zone(sup_chosen_zone)
+    print(f"At time {current_game_time} minutes, ally sup in zone {sup_chosen_zone.name}, the position is {sup_position}")
+
+def generate_enemy_position(current_game_time, side, neutral_camp, enemy_drake_count, ally_drake_count, grub_slain_by, baron_slain_by, elder_slain_by):
+    
+    # jungle
+    jungle_possible_zone, player_weight = jg_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, grub_slain_by=grub_slain_by, drake_alive=neutral_camp[1].alive, 
+                                      grubs_alive=neutral_camp[2].alive, herald_alive=neutral_camp[3].alive, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=0)
+    
+    jungle_chosen_zone = random.choices(jungle_possible_zone, player_weight)[0]
+    jungle_position = generate_random_point_in_zone(jungle_chosen_zone)
+    print(f"At time {current_game_time} minutes, enemy jungle in zone {jungle_chosen_zone.name}, the position is {jungle_position}")
+
+    # top
+    top_possible_zone, top_weight = top_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, jungle_zone=jungle_chosen_zone, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=0)
+    top_chosen_zone = random.choices(top_possible_zone, top_weight)[0]
+    top_position = generate_random_point_in_zone(top_chosen_zone)
+    print(f"At time {current_game_time} minutes, enemy top in zone {top_chosen_zone.name}, the position is {top_position}")
+
+    # mid
+    mid_possible_zone, mid_weight = mid_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, jungle_zone=jungle_chosen_zone, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=0)
+    mid_chosen_zone = random.choices(mid_possible_zone, mid_weight)[0]
+    mid_position = generate_random_point_in_zone(mid_chosen_zone)
+    print(f"At time {current_game_time} minutes, enemy mid in zone {mid_chosen_zone.name}, the position is {mid_position}")
+
+    # bot
+    bot_possible_zone, bot_weight = bot_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, jungle_zone=jungle_chosen_zone, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=0)
+    bot_chosen_zone = random.choices(bot_possible_zone, bot_weight)[0]
+    bot_position = generate_random_point_in_zone(bot_chosen_zone)
+    print(f"At time {current_game_time} minutes, enemy bot in zone {bot_chosen_zone.name}, the position is {bot_position}")
+
+    # sup
+    sup_possible_zone, sup_weight = bot_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, jungle_zone=jungle_chosen_zone, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, baron_alive=neutral_camp[4].alive, baron_killed_by= baron_slain_by, elder_alive=neutral_camp[5].alive,
+                                      elder_killed_by= elder_slain_by, player_or_not=0)
+    sup_chosen_zone = random.choices(sup_possible_zone, sup_weight)[0]
+    sup_position = generate_random_point_in_zone(sup_chosen_zone)
+    print(f"At time {current_game_time} minutes, enemy sup in zone {sup_chosen_zone.name}, the position is {sup_position}")
 
 # 防禦塔
 def enemyturret():
@@ -583,6 +656,7 @@ def junglecamp(time, drakecount, drakes):
 
     # grubs 1 
     # done
+    grub_slain_by = "Nobody"
     if int(time[0:2]) < 6:
         timenow = int(time[0:2]) * 60 + int(time[3:5])
         respawn = 360 - timenow
@@ -598,7 +672,7 @@ def junglecamp(time, drakecount, drakes):
             timenow = int(time[0:2]) * 60 + int(time[3:5])
             timediff = 0
             # killed time
-            killed_time = random.randint(375, timenow)
+            killed_time = random.randint(360, timenow)
             minutes, seconds = divmod(killed_time, 60)
             slain_by = random.choice(["ally", "enemy"])
             grub_slain_by = slain_by
@@ -639,6 +713,8 @@ def junglecamp(time, drakecount, drakes):
 
     # baron
     # done
+    baron_slain_by = "Nobody"
+
     if int(time[0:2]) < 20:
         timenow = int(time[0:2]) * 60 + int(time[3:5])
         respawn = 1200 - timenow
@@ -661,32 +737,60 @@ def junglecamp(time, drakecount, drakes):
                 timediff = timenow - respawn
             minutes, seconds = divmod(respawn, 60)
             baron = largecamp(alive=0, respawn_countdown=f'{minutes:02d}:{seconds:02d}', buff="No baron", value=1525) # killed
+            baron_buff_end_time = respawn - 360 + 180
+            if baron_buff_end_time < timenow:
+                baron_slain_by = "Nobody"
+            else:
+                baron_slain_by = random.choice(["ally", "enemy"])
 
     print(f'Baron info: alive = {baron.alive}, respawn = {baron.respawn_countdown}, type = {baron.buff}, value = {baron.value}')
 
     # elder
     # done
+
+    elder_slain_by = "Nobody"
     if not elder_available:
         elder = largecamp(alive=0, respawn_countdown=-1, buff="Won't respawn", value=1100)
     else:
+        respawn = 0
         timenow = int(time[0:2]) * 60 + int(time[3:5])
         last_drake_time, last_drake_seconds = get_last_drake_time(timenow, drakecount, drakes)
         print(f'last drake was slain at {last_drake_time}')
-        elder_spawn_time = last_drake_seconds + 360  # 6 minutes after last drake
-        if elder_spawn_time > timenow:
-            time_until_elder = elder_spawn_time - timenow
-            minutes, seconds = divmod(time_until_elder, 60)
-            elder = largecamp(alive=0, respawn_countdown=f'{minutes:02d}:{seconds:02d}', buff="Elder", value=1100)
-        else:
-            elder = largecamp(alive=1, respawn_countdown=0, buff="Elder", value=1100)
+        if timenow >= 2800 and last_drake_slain_time < timenow - 720: # 第二條遠古龍
+            alive = random.choice([0, 1])
+            if alive == 1:
+                elder = largecamp(alive=1, respawn_countdown=0, buff="Elder", value=1100)
+            else:
+                timediff = 0
+                while timediff < (timenow - 360):
+                    respawn = random.randint(1, 360)
+                    timenow = int(time[0:2]) * 60 + int(time[3:5])
+                    timediff = timenow - respawn
+                minutes, seconds = divmod(respawn, 60)
+                elder = largecamp(alive=0, respawn_countdown=f'{minutes:02d}:{seconds:02d}', buff="Elder", value=1100) # killed
+        else: # 第一條遠古龍
+            elder_spawn_time = last_drake_seconds + 360  # 6 minutes after last drake
+            if elder_spawn_time > timenow:
+                respawn = elder_spawn_time - timenow
+                minutes, seconds = divmod(respawn, 60)
+                elder = largecamp(alive=0, respawn_countdown=f'{minutes:02d}:{seconds:02d}', buff="Elder", value=1100)
+            else:
+                elder = largecamp(alive=1, respawn_countdown=0, buff="Elder", value=1100)
 
+        if not elder.alive:
+            elder_buff_end_time = respawn - 360 + 150
+            if elder_buff_end_time < timenow:
+                elder_slain_by = "Nobody"
+            else:
+                elder_slain_by = random.choice(["ally", "enemy"])
+    
     print(f'Elder info: alive = {elder.alive}, respawn = {elder.respawn_countdown}, type = {elder.buff}, value = {elder.value}')
 
     allycamp = [allygromp, allyraptor, allyblue, allykrug, allyred, allywolf]
     enemycamp = [enemygromp, enemyraptor, enemyblue, enemykrug, enemyred, enemywolf]
     neutralcamp = [scuttler, drake, grub, herald, baron, elder]
 
-    return allycamp, enemycamp, neutralcamp
+    return allycamp, enemycamp, neutralcamp, grub_slain_by, baron_slain_by, elder_slain_by
     
 
 
@@ -714,7 +818,6 @@ def available_actions(ally, enemy, neutral):
 
     return actions
 
-# 設計可能情況
 
 def main():
     current_game_time, current_game_seconds = generate_specific_game_time()
@@ -736,8 +839,8 @@ def main():
 
     print(f'Drake slained: {truedrakecount}')
 
-    ally_camp, enemy_camp, neural_camp = junglecamp(current_game_time, drakecount=truedrakecount, drakes=drakes)
-    actions = available_actions(ally=ally_camp, enemy=enemy_camp, neutral=neural_camp)
+    ally_camp, enemy_camp, neutral_camp, grub_slain_by, baron_slain_by, elder_slain_by = junglecamp(current_game_time, drakecount=truedrakecount, drakes=drakes)
+    actions = available_actions(ally=ally_camp, enemy=enemy_camp, neutral=neutral_camp)
 
     print("\n")
 
@@ -767,6 +870,17 @@ def main():
     generate_player_sum_and_runes(player)
     generate_ally_sum_and_runes(ally_top, ally_mid, ally_bot, ally_sup)
     generate_enemy_sum_and_runes(enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup)
+
+    print(f"Last Baron was slained by {baron_slain_by}\n")
+    print(f"Last Elder was slained by {elder_slain_by}\n")
+
+    # for allys
+    side = random.choice((-1,1))
+    side2 = side * -1
+    print(f"Player at side {side}")
+
+    generate_ally_position(current_game_time, side, neutral_camp, ally_drake_count, enemy_drake_count, grub_slain_by, baron_slain_by, elder_slain_by)
+    generate_enemy_position(current_game_time, side2, neutral_camp, enemy_drake_count, ally_drake_count, grub_slain_by, baron_slain_by, elder_slain_by) 
 
 
 

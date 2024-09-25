@@ -37,17 +37,18 @@ red_top_lane = MapZone("Red Top Lane", {
 # 定義mid lane的分割點
 mid_cutoff = 7425  # 這是中間點，大約是地圖正中央
 
-# 定義各區域
+# 藍方中路區域，x == y 且 x <= mid_cutoff
 blue_mid_lane = MapZone("Blue Mid Lane", {
     'type': 'line',
-    'equation': lambda x, y: x == y and x <= mid_cutoff,  # 藍方區域：x <= mid_cutoff
+    'equation': lambda x: x,  # 因為 x == y，所以 y 直接等於 x
     'x_min': 0,
     'x_max': mid_cutoff  # 最大值為分割點
 })
 
+# 紅方中路區域，x == y 且 x >= mid_cutoff
 red_mid_lane = MapZone("Red Mid Lane", {
     'type': 'line',
-    'equation': lambda x, y: x == y and x >= mid_cutoff,  # 紅方區域：x >= mid_cutoff
+    'equation': lambda x: x,  # 因為 x == y，所以 y 直接等於 x
     'x_min': mid_cutoff,
     'x_max': 14850  # 最大值為地圖最大值
 })
@@ -68,17 +69,16 @@ red_bot_lane = MapZone("Red Bot Lane", {
     'y_max': 14850
 })
 
-# 定義上河道和下河道
 upper_river = MapZone("Upper River", {
     'type': 'line',
-    'equation': lambda x, y: x + y == 14850 and x <= mid_cutoff and y >= mid_cutoff,  # 上河道在中路上方
+    'equation': lambda x: 14850 - x,  # 根據 x 計算 y 值
     'x_min': 0,
     'x_max': mid_cutoff
 })
 
 lower_river = MapZone("Lower River", {
     'type': 'line',
-    'equation': lambda x, y: x + y == 14850 and x >= mid_cutoff and y <= mid_cutoff,  # 下河道在中路下方
+    'equation': lambda x: 14850 - x,  # 根據 x 計算 y 值
     'x_min': mid_cutoff,
     'x_max': 14850
 })
@@ -143,28 +143,26 @@ def generate_random_point_in_zone(zone):
         y = random.uniform(zone.boundaries['y_min'], zone.boundaries['y_max'])
         return x, y
     elif zone.boundaries['type'] == 'circle':
-        center_x, center_y, radius = zone.boundaries['center']
-        angle = random.uniform(0, 2 * 3.14159)  # 隨機角度
+        center_x, center_y = zone.boundaries['center']
+        radius = zone.boundaries['radius']
+        angle = random.uniform(0, 2 * pi)  # 隨機角度
         r = radius * random.uniform(0, 1)  # 隨機半徑
         x = center_x + r * cos(angle)
         y = center_y + r * sin(angle)
         return x, y
     elif zone.boundaries['type'] == 'line':
-        # 針對線型區域的隨機點生成，這裡假設y是x的函數
-        if 'equation' in zone.boundaries:
-            # 隨機選取一個x值，計算相應的y值
-            x = random.uniform(zone.boundaries['x_min'], zone.boundaries['x_max'])
-            y = zone.boundaries['equation'](x)
-            return x, y
+        # 針對線型區域的隨機點生成，這裡假設x是隨機，y根據equation計算
+        x = random.uniform(zone.boundaries['x_min'], zone.boundaries['x_max'])
+        y = zone.boundaries['equation'](x)  # 根據x計算y
+        return x, y
     return None
-
 # 隨機選擇一個區域並生成隨機點
 # random_zone = random.choice(zones)
 # random_point = generate_random_point_in_zone(random_zone)
 
 # 根據不同的時間段，定義可能出現的區域並分配權重
 # 上路
-def top_get_zones_and_weights_for_time(time, side, jungle_zone, mid_zone, drake_count, enemy_drake_count):
+def top_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, enemy_drake_count, baron_alive, baron_killed_by, elder_alive, elder_killed_by, player_or_not):
     if side == 1: # 藍
         if time <= 6:
             current_zones = [blue_top_lane]
@@ -191,32 +189,38 @@ def top_get_zones_and_weights_for_time(time, side, jungle_zone, mid_zone, drake_
                 current_zones = [blue_top_lane]
                 weights = [1]
         elif 20 <= time:
-            if mid_zone == blue_bot_lane:
-                if jungle_zone == baron_pit:
-                    current_zones = [blue_top_lane, baron_pit]
-                    weights = [0.6, 0.4]
-                elif jungle_zone == dragon_pit and drake_count < 3:
-                    current_zones = [blue_top_lane, dragon_pit]
-                    weights = [0.7, 0.3]
-                elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
-                    current_zones = [blue_top_lane, dragon_pit]
-                    weights = [0.55, 0.45]
-                else:
-                    current_zones = [blue_top_lane]
-                    weights = [0.75]
+            # if mid_zone == blue_bot_lane:
+            if (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
+                weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
+                weights = [0.3, 0.3, 0.5, 0.05, 0.05]
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+                weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif jungle_zone == baron_pit:
+                current_zones = [blue_top_lane, baron_pit]
+                weights = [0.6, 0.4]
+            elif jungle_zone == dragon_pit and drake_count < 3:
+                current_zones = [blue_top_lane, dragon_pit]
+                weights = [0.7, 0.3]
+            elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
+                current_zones = [blue_top_lane, dragon_pit]
+                weights = [0.55, 0.45]
             else:
-                if jungle_zone == baron_pit:
-                    current_zones = [blue_bot_lane, baron_pit]
-                    weights = [0.6, 0.4]
-                elif jungle_zone == dragon_pit and drake_count < 3:
-                    current_zones = [blue_bot_lane, dragon_pit]
-                    weights = [0.7, 0.3]
-                elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
-                    current_zones = [blue_bot_lane, dragon_pit]
-                    weights = [0.55, 0.45]
-                else:
-                    current_zones = [blue_bot_lane]
-                    weights = [0.75]
+                current_zones = [blue_top_lane]
+                weights = [0.75]
+            # else:
+            #     if jungle_zone == baron_pit:
+            #         current_zones = [blue_bot_lane, baron_pit]
+            #         weights = [0.6, 0.4]
+            #     elif jungle_zone == dragon_pit and drake_count < 3:
+            #         current_zones = [blue_bot_lane, dragon_pit]
+            #         weights = [0.7, 0.3]
+            #     elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
+            #         current_zones = [blue_bot_lane, dragon_pit]
+            #         weights = [0.55, 0.45]
+            #     else:
+            #         current_zones = [blue_bot_lane]
+            #         weights = [0.75]
     
     else: # 紅
         if time <= 6:
@@ -244,36 +248,42 @@ def top_get_zones_and_weights_for_time(time, side, jungle_zone, mid_zone, drake_
                 current_zones = [red_top_lane]
                 weights = [1]
         elif 20 <= time:
-            if mid_zone == blue_bot_lane:
-                if jungle_zone == baron_pit:
-                    current_zones = [red_top_lane, baron_pit]
-                    weights = [0.6, 0.4]
-                elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
-                    current_zones = [red_top_lane, dragon_pit]
-                    weights = [0.55, 0.45]
-                elif jungle_zone == dragon_pit and drake_count < 3:
-                    current_zones = [red_top_lane, dragon_pit]
-                    weights = [0.7, 0.3]
-                else:
-                    current_zones = [red_top_lane]
-                    weights = [0.75]
+            # if mid_zone == blue_bot_lane:
+            if (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
+                weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+                weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif jungle_zone == baron_pit:
+                current_zones = [red_top_lane, baron_pit]
+                weights = [0.6, 0.4]
+            elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
+                current_zones = [red_top_lane, dragon_pit]
+                weights = [0.55, 0.45]
+            elif jungle_zone == dragon_pit and drake_count < 3:
+                current_zones = [red_top_lane, dragon_pit]
+                weights = [0.7, 0.3]
             else:
-                if jungle_zone == baron_pit:
-                    current_zones = [red_bot_lane, baron_pit]
-                    weights = [0.6, 0.4]
-                elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
-                    current_zones = [red_bot_lane, dragon_pit]
-                    weights = [0.55, 0.45]
-                elif jungle_zone == dragon_pit and drake_count < 3:
-                    current_zones = [red_bot_lane, dragon_pit]
-                    weights = [0.7, 0.3]
-                else:
-                    current_zones = [red_bot_lane]
-                    weights = [0.75]
+                current_zones = [red_top_lane]
+                weights = [0.75]
+            # else:
+            # if jungle_zone == baron_pit:
+            #     current_zones = [red_bot_lane, baron_pit]
+            #     weights = [0.6, 0.4]
+            # elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
+            #     current_zones = [red_bot_lane, dragon_pit]
+            #     weights = [0.55, 0.45]
+            # elif jungle_zone == dragon_pit and drake_count < 3:
+            #     current_zones = [red_bot_lane, dragon_pit]
+            #     weights = [0.7, 0.3]
+            # else:
+            #     current_zones = [red_bot_lane]
+            #     weights = [0.75]
     return current_zones, weights
 
 # 中路
-def mid_get_zones_and_weights_for_time(time, side, jungle_zone, top_zone, drake_count, enemy_drake_count):
+def mid_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, enemy_drake_count, baron_alive, baron_killed_by, elder_alive, elder_killed_by, player_or_not):
     if side == 1: # 藍
         if time <= 6:
             current_zones = [blue_mid_lane]
@@ -303,32 +313,38 @@ def mid_get_zones_and_weights_for_time(time, side, jungle_zone, top_zone, drake_
                 current_zones = [blue_bot_lane]
                 weights = [1]
         elif 20 <= time:
-            if top_zone == blue_bot_lane:
-                if jungle_zone == baron_pit:
-                    current_zones = [blue_top_lane, baron_pit]
-                    weights = [0.6, 0.4]
-                elif jungle_zone == dragon_pit and drake_count < 3:
-                    current_zones = [blue_top_lane, dragon_pit]
-                    weights = [0.7, 0.3]
-                elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
-                    current_zones = [blue_top_lane, dragon_pit]
-                    weights = [0.55, 0.45]
-                else:
-                    current_zones = [blue_top_lane]
-                    weights = [0.75]
+            # if top_zone == blue_bot_lane:
+            #     if jungle_zone == baron_pit:
+            #         current_zones = [blue_top_lane, baron_pit]
+            #         weights = [0.6, 0.4]
+            #     elif jungle_zone == dragon_pit and drake_count < 3:
+            #         current_zones = [blue_top_lane, dragon_pit]
+            #         weights = [0.7, 0.3]
+            #     elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
+            #         current_zones = [blue_top_lane, dragon_pit]
+            #         weights = [0.55, 0.45]
+            #     else:
+            #         current_zones = [blue_top_lane]
+            #         weights = [0.75]
+            # else:
+            if (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
+                weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
+                weights = [0.3, 0.3, 0.5, 0.05, 0.05]
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+                weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif jungle_zone == baron_pit:
+                current_zones = [blue_bot_lane, baron_pit]
+                weights = [0.6, 0.4]
+            elif jungle_zone == dragon_pit and drake_count < 3:
+                current_zones = [blue_bot_lane, dragon_pit]
+                weights = [0.7, 0.3]
+            elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
+                current_zones = [blue_bot_lane, dragon_pit]
+                weights = [0.55, 0.45]
             else:
-                if jungle_zone == baron_pit:
-                    current_zones = [blue_bot_lane, baron_pit]
-                    weights = [0.6, 0.4]
-                elif jungle_zone == dragon_pit and drake_count < 3:
-                    current_zones = [blue_bot_lane, dragon_pit]
-                    weights = [0.7, 0.3]
-                elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
-                    current_zones = [blue_bot_lane, dragon_pit]
-                    weights = [0.55, 0.45]
-                else:
-                    current_zones = [blue_bot_lane]
-                    weights = [0.75]
+                current_zones = [blue_bot_lane]
+                weights = [0.75]
     
     else: # 紅
         if time <= 6:
@@ -356,36 +372,42 @@ def mid_get_zones_and_weights_for_time(time, side, jungle_zone, top_zone, drake_
                 current_zones = [red_bot_lane]
                 weights = [1]
         elif 20 <= time:
-            if top_zone == blue_bot_lane:
-                if jungle_zone == baron_pit:
-                    current_zones = [red_top_lane, baron_pit]
-                    weights = [0.6, 0.4]
-                elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
-                    current_zones = [red_top_lane, dragon_pit]
-                    weights = [0.55, 0.45]
-                elif jungle_zone == dragon_pit and drake_count < 3:
-                    current_zones = [red_top_lane, dragon_pit]
-                    weights = [0.7, 0.3]
-                else:
-                    current_zones = [red_top_lane]
-                    weights = [0.75]
+            # if top_zone == blue_bot_lane:
+            #     if jungle_zone == baron_pit:
+            #         current_zones = [red_top_lane, baron_pit]
+            #         weights = [0.6, 0.4]
+            #     elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
+            #         current_zones = [red_top_lane, dragon_pit]
+            #         weights = [0.55, 0.45]
+            #     elif jungle_zone == dragon_pit and drake_count < 3:
+            #         current_zones = [red_top_lane, dragon_pit]
+            #         weights = [0.7, 0.3]
+            #     else:
+            #         current_zones = [red_top_lane]
+            #         weights = [0.75]
+            # else:
+            if (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
+                weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+                weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif jungle_zone == baron_pit:
+                current_zones = [red_bot_lane, baron_pit]
+                weights = [0.6, 0.4]
+            elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
+                current_zones = [red_bot_lane, dragon_pit]
+                weights = [0.55, 0.45]
+            elif jungle_zone == dragon_pit and drake_count < 3:
+                current_zones = [red_bot_lane, dragon_pit]
+                weights = [0.7, 0.3]
             else:
-                if jungle_zone == baron_pit:
-                    current_zones = [red_bot_lane, baron_pit]
-                    weights = [0.6, 0.4]
-                elif jungle_zone == dragon_pit and (drake_count == 3 or enemy_drake_count == 3):
-                    current_zones = [red_bot_lane, dragon_pit]
-                    weights = [0.55, 0.45]
-                elif jungle_zone == dragon_pit and drake_count < 3:
-                    current_zones = [red_bot_lane, dragon_pit]
-                    weights = [0.7, 0.3]
-                else:
-                    current_zones = [red_bot_lane]
-                    weights = [0.75]
+                current_zones = [red_bot_lane]
+                weights = [0.75]
     return current_zones, weights
 
 # 下路
-def bot_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, enemy_drake_count):
+def bot_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, enemy_drake_count, baron_alive, baron_killed_by, elder_alive, elder_killed_by, player_or_not):
     if side == 1:
         if time < 5:
             current_zones = [blue_bot_lane]
@@ -418,7 +440,13 @@ def bot_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, ene
                 current_zones = [blue_mid_lane]
                 weights = [1]
         elif 20 <= time:
-            if jungle_zone == baron_pit:
+            if (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
+                weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
+                weights = [0.3, 0.3, 0.5, 0.05, 0.05]
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+                weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif jungle_zone == baron_pit:
                 current_zones = [blue_mid_lane, baron_pit]
                 weights = [0.6, 0.4]
             elif jungle_zone == dragon_pit and drake_count < 3:
@@ -462,7 +490,13 @@ def bot_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, ene
                 current_zones = [red_mid_lane]
                 weights = [1]
         elif 20 <= time:
-            if jungle_zone == baron_pit:
+            if (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
+                weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+                weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif jungle_zone == baron_pit:
                 current_zones = [red_mid_lane, baron_pit]
                 weights = [0.6, 0.4]
             elif jungle_zone == dragon_pit and drake_count < 3:
@@ -477,7 +511,7 @@ def bot_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, ene
     return current_zones, weights
 
 # 輔助
-def sup_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, enemy_drake_count):
+def sup_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, enemy_drake_count, baron_alive, baron_killed_by, elder_alive, elder_killed_by, player_or_not):
     if side == 1:
         if time < 5:
             current_zones = [blue_bot_lane]
@@ -513,7 +547,13 @@ def sup_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, ene
                 current_zones = [blue_mid_lane, upper_river, lower_river, lower_blue_jungle, upper_blue_jungle, lower_red_jungle, upper_red_jungle]
                 weights = [0.85, 0.05, 0.05, 0.02, 0.02, 0.005, 0.005]
         elif 20 <= time:
-            if jungle_zone == baron_pit:
+            if (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
+                weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
+                weights = [0.3, 0.3, 0.5, 0.05, 0.05]
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+                weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif jungle_zone == baron_pit:
                 current_zones = [blue_mid_lane, baron_pit]
                 weights = [0.6, 0.4]
             elif jungle_zone == dragon_pit and drake_count < 3:
@@ -560,7 +600,13 @@ def sup_get_zones_and_weights_for_time(time, side, jungle_zone, drake_count, ene
                 current_zones = [red_mid_lane, upper_river, lower_river, lower_blue_jungle, upper_blue_jungle, lower_red_jungle, upper_red_jungle]
                 weights = [0.85, 0.05, 0.05, 0.02, 0.02, 0.005, 0.005]
         elif 20 <= time:
-            if jungle_zone == baron_pit:
+            if (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
+                weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+                weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
+                weights = [0.3, 0.3, 0.3, 0.05, 0.05]
+            elif jungle_zone == baron_pit:
                 current_zones = [red_mid_lane, baron_pit]
                 weights = [0.6, 0.4]
             elif jungle_zone == dragon_pit and drake_count < 3:
@@ -613,18 +659,28 @@ def jg_get_zones_and_weights_for_time(time, side, drake_count, enemy_drake_count
                 weights = [0.4, 0.4, 0.01, 0.01, 0.015, 0.015, 0.01, 0.13, 0.01]
         elif 20 <= time:
             if elder_alive: # 遠古龍活著
-                current_zones = [upper_blue_jungle, lower_blue_jungle, upper_river, lower_river, upper_red_jungle, lower_red_jungle, dragon_pit, blue_mid_lane, blue_bot_lane, blue_top_lane]
+                current_zones = [upper_blue_jungle, lower_blue_jungle, upper_river, lower_river, upper_red_jungle, lower_red_jungle, dragon_pit]
                 weights = [0.1, 0.1, 0.005, 0.015, 0.01, 0.01, 0.76]
+                return current_zones, weights
             elif (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
                 weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
                 weights = [0.3, 0.3, 0.3, 0.05, 0.05]
-            elif baron_alive: # 巴龍活著
+                return current_zones, weights
+
+            possible = 0
+            if baron_alive and drake_alive:
+                possible = random.choice((0,1))
+            
+            if time > 30:
+                possible = 1 # 必須考慮巴龍優先
+
+            if possible and time >= 25: # 巴龍活著
                 current_zones = [upper_blue_jungle, lower_blue_jungle, upper_river, lower_river, upper_red_jungle, lower_red_jungle, baron_pit]
                 weights = [0.1, 0.1, 0.015, 0.005, 0.01, 0.01, 0.76]
-            elif (not baron_alive and elder_killed_by == "enemy" and player_or_not) or (not baron_alive and elder_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
                 weights = [blue_bot_lane, blue_mid_lane, blue_top_lane ,lower_blue_jungle, upper_blue_jungle]
                 weights = [0.3, 0.3, 0.3, 0.05, 0.05]
-            elif drake_alive:
+            elif not possible:
                 if enemy_drake_count == 3 or drake_count == 3:
                     current_zones = [upper_blue_jungle, lower_blue_jungle, upper_river, lower_river, upper_red_jungle, lower_red_jungle, dragon_pit]
                     weights = [0.1, 0.1, 0.005, 0.015, 0.01, 0.01, 0.76]
@@ -633,7 +689,7 @@ def jg_get_zones_and_weights_for_time(time, side, drake_count, enemy_drake_count
                     weights = [0.15, 0.15, 0.02, 0.05, 0.01, 0.01, 0.61]
             else:
                 current_zones = [upper_blue_jungle, lower_blue_jungle, upper_river, lower_river, upper_red_jungle, lower_red_jungle]
-            weights = [0.45, 0.45, 0.04, 0.04, 0.01, 0.01]
+                weights = [0.45, 0.45, 0.04, 0.04, 0.01, 0.01]
     else:
         if time < 5:
             current_zones = [upper_red_jungle, lower_red_jungle, upper_river, lower_river, upper_blue_jungle, lower_blue_jungle, blue_mid_lane, blue_bot_lane, blue_top_lane]
@@ -671,18 +727,28 @@ def jg_get_zones_and_weights_for_time(time, side, drake_count, enemy_drake_count
                 weights = [0.4, 0.4, 0.01, 0.01, 0.015, 0.015, 0.01, 0.13, 0.01]
         elif 20 <= time:
             if elder_alive: # 遠古龍活著
-                current_zones = [upper_red_jungle, lower_red_jungle, upper_river, lower_river, upper_blue_jungle, lower_blue_jungle, dragon_pit, blue_mid_lane, blue_bot_lane, blue_top_lane]
+                current_zones = [upper_red_jungle, lower_red_jungle, upper_river, lower_river, upper_blue_jungle, lower_blue_jungle, dragon_pit]
                 weights = [0.1, 0.1, 0.005, 0.015, 0.01, 0.01, 0.76]
+                return current_zones, weights
             elif (not elder_alive and elder_killed_by == "enemy" and player_or_not) or (not elder_alive and elder_killed_by == "ally" and not player_or_not): # 遠古龍被對面吃掉
                 weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
                 weights = [0.3, 0.3, 0.3, 0.05, 0.05]
-            elif baron_alive: # 巴龍活著
+                return current_zones, weights
+            
+            possible = 0
+            if baron_alive and drake_alive:
+                possible = random.choice((0,1))
+            
+            if time > 30:
+                possible = 1 # 必須考慮巴龍優先
+
+            if possible: # 巴龍活著
                 current_zones = [upper_red_jungle, lower_red_jungle, upper_river, lower_river, upper_blue_jungle, lower_blue_jungle, baron_pit]
                 weights = [0.1, 0.1, 0.015, 0.005, 0.01, 0.01, 0.76]
-            elif (not baron_alive and elder_killed_by == "enemy" and player_or_not) or (not baron_alive and elder_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
+            elif (not baron_alive and baron_killed_by == "enemy" and player_or_not) or (not baron_alive and baron_killed_by == "ally" and not player_or_not): # 巴龍被對面吃掉
                 weights = [red_bot_lane, red_mid_lane, red_top_lane ,upper_red_jungle, lower_red_jungle]
                 weights = [0.3, 0.3, 0.3, 0.05, 0.05]
-            elif drake_alive:
+            elif not possible:
                 if enemy_drake_count == 3 or drake_count == 3:
                     current_zones = [upper_red_jungle, lower_red_jungle, upper_river, lower_river, upper_blue_jungle, lower_blue_jungle, dragon_pit]
                     weights = [0.1, 0.1, 0.005, 0.015, 0.01, 0.01, 0.76]
@@ -691,5 +757,5 @@ def jg_get_zones_and_weights_for_time(time, side, drake_count, enemy_drake_count
                     weights = [0.15, 0.15, 0.02, 0.05, 0.01, 0.01, 0.61]
             else:
                 current_zones = [upper_red_jungle, lower_red_jungle, upper_river, lower_river, upper_blue_jungle, lower_blue_jungle]
-            weights = [0.45, 0.45, 0.04, 0.04, 0.01, 0.01]
+                weights = [0.45, 0.45, 0.04, 0.04, 0.01, 0.01]
     return current_zones, weights
