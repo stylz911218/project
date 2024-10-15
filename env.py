@@ -185,8 +185,7 @@ def generate_enemy_sum_and_runes(top, jg, mid, bot, sup):
 
     print(f"Enemy: Top: {top.summoners}, Jg: {jg.summoners} ,Mid: {mid.summoners}, Bot: {bot.summoners}, Sup: {sup.summoners} \n")
 
-# TODO
-def generate_ally_position(current_game_time, side, neutral_camp, ally_drake_count, enemy_drake_count, grub_slain_by, baron_slain_by, elder_slain_by):
+def generate_ally_position(current_game_time, side, neutral_camp, ally_drake_count, enemy_drake_count, grub_slain_by, baron_slain_by, elder_slain_by, ally_top, player, ally_mid, ally_bot, ally_sup):
     
     # player
     player_possible_zone, player_weight = jg_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, grub_slain_by=grub_slain_by, drake_alive=neutral_camp[1].alive, 
@@ -225,7 +224,13 @@ def generate_ally_position(current_game_time, side, neutral_camp, ally_drake_cou
     sup_position = generate_random_point_in_zone(sup_chosen_zone)
     print(f"At time {current_game_time} minutes, ally sup in zone {sup_chosen_zone.name}, the position is {sup_position}")
 
-def generate_enemy_position(current_game_time, side, neutral_camp, enemy_drake_count, ally_drake_count, grub_slain_by, baron_slain_by, elder_slain_by):
+    ally_top.current_place(top_chosen_zone.name, top_position)
+    player.current_place(player_chosen_zone.name, player_position)
+    ally_mid.current_place(mid_chosen_zone.name, mid_position)
+    ally_bot.current_place(bot_chosen_zone.name, bot_position)
+    ally_sup.current_place(sup_chosen_zone.name, sup_position)
+
+def generate_enemy_position(current_game_time, side, neutral_camp, enemy_drake_count, ally_drake_count, grub_slain_by, baron_slain_by, elder_slain_by,  enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup):
     
     # jungle
     jungle_possible_zone, player_weight = jg_get_zones_and_weights_for_time(time=int(current_game_time[0:2]), side=side, drake_count=ally_drake_count, enemy_drake_count=enemy_drake_count, grub_slain_by=grub_slain_by, drake_alive=neutral_camp[1].alive, 
@@ -263,6 +268,12 @@ def generate_enemy_position(current_game_time, side, neutral_camp, enemy_drake_c
     sup_chosen_zone = random.choices(sup_possible_zone, sup_weight)[0]
     sup_position = generate_random_point_in_zone(sup_chosen_zone)
     print(f"At time {current_game_time} minutes, enemy sup in zone {sup_chosen_zone.name}, the position is {sup_position}")
+
+    enemy_top.current_place(top_chosen_zone.name, top_position)
+    enemy_jg.current_place(jungle_chosen_zone.name, jungle_position)
+    enemy_mid.current_place(mid_chosen_zone.name, mid_position)
+    enemy_bot.current_place(bot_chosen_zone.name, bot_position)
+    enemy_sup.current_place(sup_chosen_zone.name, sup_position)
 
 # 防禦塔
 def enemyturret():
@@ -879,8 +890,10 @@ def main():
     side2 = side * -1
     print(f"Player at side {side}")
 
-    generate_ally_position(current_game_time, side, neutral_camp, ally_drake_count, enemy_drake_count, grub_slain_by, baron_slain_by, elder_slain_by)
-    generate_enemy_position(current_game_time, side2, neutral_camp, enemy_drake_count, ally_drake_count, grub_slain_by, baron_slain_by, elder_slain_by) 
+    generate_ally_position(current_game_time, side, neutral_camp, ally_drake_count, enemy_drake_count, grub_slain_by, baron_slain_by, elder_slain_by\
+                           , ally_top, player, ally_mid, ally_bot, ally_sup)
+    generate_enemy_position(current_game_time, side2, neutral_camp, enemy_drake_count, ally_drake_count, grub_slain_by, baron_slain_by, elder_slain_by\
+                            ,  enemy_top, enemy_jg, enemy_mid, enemy_bot, enemy_sup) 
 
 
 

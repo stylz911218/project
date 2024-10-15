@@ -63,9 +63,8 @@ class champion:
         self.zone = zone
         self.location = location
 
-    # TODO
     # 狀態評分
-    def state_value(self, hp_now, mana_now, keystone, current_location, player_location ,summoners1_, summoners2_, alive):
+    def state_value(self, hp_now, mana_now, keystone ,summoners1_, summoners2_):
 
         # 針對目前狀態
         if self.mana == -1 and self.hp == -1: # random
@@ -103,23 +102,23 @@ class champion:
         # 核心符文
         if set(keystone).issubset(set(self.correctkeystone)):
             self.value += 10
-        
-        # 位置
-        # TODO
-        if 0 < abs(current_location - player_location) <= 1:
-            self.value += self.team * 30
-        elif 1 < abs(current_location - player_location) < 2.7:
-            self.value += self.team * 15
-        elif 2.7 <= abs(current_location - player_location) and ((self.summoners[0] == 6 and summoners1_) or (self.summoners[1] == 6 and summoners2_)):
-            self.value += self.team * 20
-        elif 2.7 <= abs(current_location - player_location):
-            self.value += self.team * 5
+    
+    # 位置評分
+    def location_value(self, player_location, player):
+        if player:
+            return
 
-        if alive == 0:
-            if self.team == 1:
-                self.value = -1000
-            else:
-                self.value = 1000
+        # 基本距離計算
+        distance = ((self.location[0] - player_location[0])**2 + (self.location[1] - player_location[1])**2)**0.5
+        max_distance = 14850  # 假設地圖的對角線最大距離
+        distance_score = max_distance - distance  # 距離越近，分數越高
+
+        self.value += (distance_score * 0.01)
+
+    def state_value(self, player, player_location, hp_now, mana_now, keystone ,summoners1_, summoners2_):
+        self.location_value(player=player, player_location=player_location)
+        self.state_value(hp_now, mana_now, keystone ,summoners1_, summoners2_)
+
 
 
 # 小型野怪
