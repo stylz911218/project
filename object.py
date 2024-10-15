@@ -98,11 +98,11 @@ class champion:
 
         # 召喚師技能
         if set(self.summoners).issubset(set(self.correctsummoners)):
-            self.value += 20
+            self.value += 10
 
         # 核心符文
         if set(keystone).issubset(set(self.correctkeystone)):
-            self.value += 20
+            self.value += 10
         
         # 位置
         # TODO
