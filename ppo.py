@@ -130,18 +130,16 @@ def stochastic_reward(action, state):
     reward_value = 0
     reward_probability = 0
 
-    # 取得敵方打野的狀態分數 (enemy jungler score)
-    enemy_jungler_score = enemy_states[1]  # 第二個數值為敵方打野狀態評分
+    enemy_jungler_score = enemy_states[1]
     
-    # 敵方打野的狀態越高，成功率越低
+
     jungler_influence = 1 / (1 + np.exp(0.1 * enemy_jungler_score))  # 基於敵方打野的成功率調整，打野分數越高，成功率越低
     
-    # 成功率的基本計算 (基於敵我狀態的總和，但排除敵方打野)
     total_enemy_states = enemy_states.copy()
-    del total_enemy_states[1]  # 移除敵方打野的評分
+    del total_enemy_states[1]
 
-    total_state_diff = sum(ally_states) + sum(total_enemy_states)  # 計算排除敵方打野後的敵我實力差距
-    base_probability = 1 / (1 + np.exp(-0.1 * total_state_diff))  # 這裡的0.1是平滑係數，可根據需求調整
+    total_state_diff = sum(ally_states) + sum(total_enemy_states)  
+    base_probability = 1 / (1 + np.exp(-0.1 * total_state_diff))  
 
     # 獎勵和成功率計算
     if real_action == "take grubs" and current_game_seconds < 14 * 60:
@@ -168,7 +166,7 @@ def stochastic_reward(action, state):
         else:
             reward_value = BUFF_VALUES["drake"]
         
-        reward_probability = base_probability * jungler_influence * 0.8  # 小龍相對容易
+        reward_probability = base_probability * jungler_influence * 0.8  
 
     elif real_action == "take baron" and current_game_seconds > 20 * 60:
         reward_value = BUFF_VALUES["baron"] + (current_game_seconds - 20 * 60) // 60  # 隨時間增加價值
@@ -226,7 +224,7 @@ class PPOTrainer:
 # 假設一些隨機的狀態、動作和獎勵來進行訓練
 def train_model():
     trainer = PPOTrainer(state_dim=18, action_dim=8)
-    for episode in tqdm(range(1000000), desc="Training Progress"):
+    for episode in tqdm(range(100000), desc="Training Progress"):
         state, actions = env()  # 獲取當前環境狀態和可行動作
         
         if len(actions) == 0:
