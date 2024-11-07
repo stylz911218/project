@@ -10,8 +10,6 @@ from tqdm import tqdm
 # 設置模型是否使用GPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-wandb.init(project="LoL Project")
-
 # 定義每個 buff 的基礎權重
 BUFF_VALUES = {
     "grubs": 20,       # 野怪 grubs
@@ -224,7 +222,7 @@ class PPOTrainer:
 # 假設一些隨機的狀態、動作和獎勵來進行訓練
 def train_model():
     trainer = PPOTrainer(state_dim=18, action_dim=8)
-    for episode in tqdm(range(100000), desc="Training Progress"):
+    for episode in tqdm(range(10000000), desc="Training Progress"):
         state, actions = env()  # 獲取當前環境狀態和可行動作
         
         if len(actions) == 0:
@@ -257,5 +255,8 @@ def train_model():
         })
 
     wandb.finish()
+    torch.save(trainer.agent.state_dict(), "trained_ppo_model.pth")
 
-train_model()
+if __name__ == "__main__":
+    wandb.init(project="LoL Project")
+    train_model()

@@ -4,3 +4,8 @@ include
 lib
 lib64
 share
+test.py
+wandb
+cal.py
+draw.py
+pyvenc.cfg
