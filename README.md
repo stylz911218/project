@@ -39,16 +39,19 @@ Using PPO, the model consists of actor and critic networks:
 - **Critic Network**: Assesses state values, guiding decisions.
 - **Reward Function**: Balances high-value and risky actions, considering probabilistic influences.
 
-![image](https://github.com/user-attachments/assets/b8a7dc89-c970-4bd6-b3ad-1a0efc02dfec)
+<p align="center">
+  <img src="![image](https://github.com/user-attachments/assets/b8a7dc89-c970-4bd6-b3ad-1a0efc02dfec)" alt="PPO Model Architecture">
+</p>
 
-PPO Model Architecture
+<p align="center"><b>PPO Model Architecture</b></p>
 
 <br>
 
-![image](https://github.com/user-attachments/assets/a67fc3a4-f61f-422c-ac35-620017d15ed8)
+<p align="center">
+  <img src="![image](https://github.com/user-attachments/assets/a67fc3a4-f61f-422c-ac35-620017d15ed8))" alt="Reward Function">
+</p>
 
-Reward Function
-
+<p align="center"><b>Reward Function</b></p>
 
 ---
 
@@ -66,17 +69,30 @@ Comparing model decisions to human judgments revealed high agreement in early/mi
 - **Temporal Analysis**: Alignment breakdown across game phases.
 - **Strategic Depth**: Assessment of model decisions in complex situations.
 
-![image](https://github.com/user-attachments/assets/79a2403c-9442-4d73-afbd-bf9e00cc5971)
-Including “Human hard to Judge” + 1000-million-episode model
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/79a2403c-9442-4d73-afbd-bf9e00cc5971" alt="Including 'Human hard to Judge' + 1000-million-episode model">
+</p>
 
-![image](https://github.com/user-attachments/assets/9a6a513f-8bdc-41b0-93bf-3e2968f34385)
-Excluding “Human hard to Judge” + 1000-million-episode model
+<p align="center"><b>Including "Human hard to Judge" + 1000-million-episode model</b></p>
 
-![image](https://github.com/user-attachments/assets/3b0453c0-b428-4371-9f0c-76f629ce2bdf)
-Including “Human hard to Judge” + 400-million-episode model 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9a6a513f-8bdc-41b0-93bf-3e2968f34385" alt="Excluding 'Human hard to Judge' + 1000-million-episode model">
+</p>
 
-![image](https://github.com/user-attachments/assets/6fa1b672-61d9-4a97-aea0-1edcb8b23d9c)
-Excluding “Human hard to Judge” + 400-million-episode model
+<p align="center"><b>Excluding "Human hard to Judge" + 1000-million-episode model</b></p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3b0453c0-b428-4371-9f0c-76f629ce2bdf" alt="Including 'Human hard to Judge' + 400-million-episode model">
+</p>
+
+<p align="center"><b>Including "Human hard to Judge" + 400-million-episode model</b></p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/6fa1b672-61d9-4a97-aea0-1edcb8b23d9c" alt="Excluding 'Human hard to Judge' + 400-million-episode model">
+</p>
+
+<p align="center"><b>Excluding "Human hard to Judge" + 400-million-episode model</b></p>
+
 
 ---
 
