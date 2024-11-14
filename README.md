@@ -40,7 +40,7 @@ Using PPO, the model consists of actor and critic networks:
 - **Reward Function**: Balances high-value and risky actions, considering probabilistic influences.
 
 <p align="center">
-  <img src="(https://github.com/user-attachments/assets/b8a7dc89-c970-4bd6-b3ad-1a0efc02dfec)" alt="PPO Model Architecture">
+  <img src="https://github.com/user-attachments/assets/b8a7dc89-c970-4bd6-b3ad-1a0efc02dfec" alt="PPO Model Architecture">
 </p>
 
 <p align="center"><b>PPO Model Architecture</b></p>
@@ -48,7 +48,7 @@ Using PPO, the model consists of actor and critic networks:
 <br>
 
 <p align="center">
-  <img src="(https://github.com/user-attachments/assets/a67fc3a4-f61f-422c-ac35-620017d15ed8))" alt="Reward Function">
+  <img src="https://github.com/user-attachments/assets/a67fc3a4-f61f-422c-ac35-620017d15ed8" alt="Reward Function">
 </p>
 
 <p align="center"><b>Reward Function</b></p>
