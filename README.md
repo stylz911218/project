@@ -4,7 +4,7 @@
 
 **Author**: 楊博聖  
 **Student ID**: 110062342  
-**University**: 國立清華大學資訊工程系  
+**University**: Computer Science, National Tsing Hua University
 
 ---
 
