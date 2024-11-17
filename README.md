@@ -2,7 +2,7 @@
 ===
 # Reinforcement Learning in League of Legends
 
-**Author**: 楊博聖
+**Author**: Po-Sheng, Yang
 **Student ID**: 110062342  
 **University**: Computer Science, National Tsing Hua University
 
