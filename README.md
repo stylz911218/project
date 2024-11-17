@@ -2,7 +2,7 @@
 ===
 # Reinforcement Learning in League of Legends
 
-**Author**: Po-Sheng, Yang
+**Author**: Po-Sheng, Yang<br>
 **Student ID**: 110062342  
 **University**: Computer Science, National Tsing Hua University
 
@@ -117,3 +117,6 @@ Comparing model decisions to human judgments revealed high agreement in early/mi
 
 ---
 
+**Special thanks to Yuwan(Chi-Chun, Hsu)(League of Legends E-sports ex-Analyst, Youtuber now) for help in environment building, player decisions, and others**
+
+---
