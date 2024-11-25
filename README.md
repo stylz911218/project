@@ -117,6 +117,6 @@ Comparing model decisions to human judgments revealed high agreement in early/mi
 
 ---
 
-### Special thanks to Yuwan(Chi-Chun, Hsu)(League of Legends E-sports ex-Analyst, Youtuber now) for help in environment building, player decisions, and others (his youtube link: <https://www.youtube.com/@yuwanxd>)
+### Special thanks to Yuwan(Chi-Chun, Hsu)(League of Legends E-sports ex-Analyst, Youtuber now) for help in environment building, player decisions, and others (Yuwan's youtube link: <https://www.youtube.com/@yuwanxd>)
 
 ---
